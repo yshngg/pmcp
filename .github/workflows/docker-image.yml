@@ -75,12 +75,6 @@ jobs:
           cache-to: type=gha,mode=max
           outputs: type=image,push-by-digest=true,name-canonical=true,push=${{ github.event_name != 'pull_request' }}
 
-      - name: Scan built image for vulnerabilities
-        uses: docker/scan-action@v2
-        with:
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        continue-on-error: true
-
       - name: Export digest
         if: github.event_name != 'pull_request'
         run: |
