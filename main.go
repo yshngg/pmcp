@@ -14,9 +14,11 @@ import (
 
 const Schema = "prom"
 
-var promAddr = flag.String("prom-addr", "", "The address of the Prometheus to connect to.")
-
-// var transportType = flag.String("transport-type", "", "")
+var (
+	promAddr      = flag.String("prom-addr", "http://localhost:9090/", "The address of the Prometheus to connect to.")
+	mcpAddr       = flag.String("mcp-addr", "localhost:8080", "The address of the MCP server to listen on.")
+	transportType = flag.String("transport", "stdio", "Transport type (stdio or http).\nThe mechanisms that handle the underlying communication between clients and servers.")
+)
 
 func init() {
 	flag.Parse()
@@ -30,6 +32,22 @@ func main() {
 
 	if err := AddTools(server); err != nil {
 		log.Fatal(err)
+	}
+
+	if *transportType == "http" {
+		// http.Handle("/ping", )
+		http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("pong"))
+		})
+
+		// Run the server over Streamable HTTP
+		streamableHTTPHandler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
+			return server
+		}, nil)
+		http.Handle("/mcp", streamableHTTPHandler)
+		if err := http.ListenAndServe(*mcpAddr, nil); err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// Run the server over stdin/stdout, until the client disconnects
