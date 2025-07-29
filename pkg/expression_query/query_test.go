@@ -27,5 +27,11 @@ func TestDemo(t *testing.T) {
 	}
 	t.Logf("Schema: %#v\n", schema)
 	t.Log(time.Now().Format(time.RFC3339))
-	time.Parse(time.RFC3339, "2025-07-28T14:50:38+08:00")
+	_, err = time.Parse(time.RFC3339, "2025-07-28T14:50:38+08:00")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var ts time.Time
+	t.Logf("ts: %#v\n", ts.IsZero())
 }

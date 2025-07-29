@@ -18,24 +18,40 @@ const RangeQueryEndpoint = "/query_range"
 // timeout=<duration>: Evaluation timeout. Optional. Defaults to and is capped by the value of the -query.timeout flag.
 // limit=<number>: Maximum number of returned series. Optional. 0 means disabled.
 type RangeQueryArguments struct {
-	Query   string        `jsonschema:"<string>: Prometheus expression query string."`
-	Start   string        `jsonschema:"<rfc3339 | unix_timestamp>: Start timestamp, inclusive."`
-	End     string        `jsonschema:"<rfc3339 | unix_timestamp>: End timestamp, inclusive."`
-	Step    time.Duration `jsonschema:"<duration | float>: Query resolution step width in duration format or float number of seconds."`
-	Timeout time.Duration `jsonschema:"<duration>: Evaluation timeout. Optional. Defaults to and is capped by the value of the -query.timeout flag."`
-	Limit   uint64        `jsonschema:"<number>: Maximum number of returned series. Optional. 0 means disabled."`
+	Query   string        `json:"query" jsonschema:"<string>: Prometheus expression query string."`
+	Start   string        `json:"start" jsonschema:"<rfc3339 | unix_timestamp>: Start timestamp, inclusive."`
+	End     string        `json:"end" jsonschema:"<rfc3339 | unix_timestamp>: End timestamp, inclusive."`
+	Step    time.Duration `json:"step" jsonschema:"<duration | float>: Query resolution step width in duration format or float number of seconds."`
+	Timeout time.Duration `json:"timeout,omitzero" jsonschema:"<duration>: Evaluation timeout. Optional. Defaults to and is capped by the value of the -query.timeout flag."`
+	Limit   uint64        `json:"limit,omitzero" jsonschema:"<number>: Maximum number of returned series. Optional. 0 means disabled."`
 }
 
 type RangeQueryResult struct{}
 
 func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[RangeQueryArguments]) (*mcp.CallToolResultFor[RangeQueryResult], error) {
-	start, err := time.Parse(time.RFC3339, params.Arguments.Start)
-	if err != nil {
-		return nil, err
+	var (
+		start, end time.Time
+		err        error
+	)
+	if len(params.Arguments.Start) != 0 {
+		start, err = time.Parse(time.RFC3339, params.Arguments.Start)
+		if err != nil {
+			return nil, err
+		}
 	}
-	end, err := time.Parse(time.RFC3339, params.Arguments.End)
-	if err != nil {
-		return nil, err
+	if len(params.Arguments.End) != 0 {
+		end, err = time.Parse(time.RFC3339, params.Arguments.End)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	opts := make([]v1.Option, 0)
+	if params.Arguments.Timeout != 0 {
+		opts = append(opts, v1.WithTimeout(params.Arguments.Timeout))
+	}
+	if params.Arguments.Limit != 0 {
+		opts = append(opts, v1.WithLimit(params.Arguments.Limit))
 	}
 
 	q.Client.QueryRange(
@@ -46,8 +62,7 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 			End:   end,
 			Step:  params.Arguments.Step,
 		},
-		v1.WithTimeout(params.Arguments.Timeout),
-		v1.WithLimit(params.Arguments.Limit),
+		opts...,
 	)
 	return &mcp.CallToolResultFor[RangeQueryResult]{
 		Content:           []mcp.Content{},
