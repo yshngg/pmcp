@@ -3,6 +3,7 @@ package expressionquery
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -36,6 +37,7 @@ type RangeQueryResult struct {
 func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[RangeQueryArguments]) (*mcp.CallToolResultFor[RangeQueryResult], error) {
 	var (
 		start, end time.Time
+		step       time.Duration
 		err        error
 	)
 	if len(params.Arguments.Start) != 0 {
@@ -50,6 +52,10 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 			return nil, err
 		}
 	}
+	if params.Arguments.Step == 0 {
+		return nil, errors.New("step cannot be 0")
+	}
+	step = params.Arguments.Step * time.Second
 
 	opts := make([]v1.Option, 0)
 	if params.Arguments.Timeout != 0 {
@@ -66,7 +72,7 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 		v1.Range{
 			Start: start,
 			End:   end,
-			Step:  params.Arguments.Step,
+			Step:  step,
 		},
 		opts...,
 	); err != nil {

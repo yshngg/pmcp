@@ -3,6 +3,7 @@ package expressionquery
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 
@@ -34,4 +35,7 @@ func TestDemo(t *testing.T) {
 
 	var ts time.Time
 	t.Logf("ts: %#v\n", ts.IsZero())
+
+	nw := 1 * time.Minute
+	t.Logf("nw: %#v\n", strconv.FormatFloat(nw.Seconds(), 'f', -1, 64))
 }
