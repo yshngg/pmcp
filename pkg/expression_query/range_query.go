@@ -30,7 +30,7 @@ type RangeQueryArguments struct {
 
 type RangeQueryResult struct {
 	Value    model.Value `json:"value"`
-	Warnings v1.Warnings `json:"warnings"`
+	Warnings v1.Warnings `json:"warnings,omitempty"`
 }
 
 func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[RangeQueryArguments]) (*mcp.CallToolResultFor[RangeQueryResult], error) {

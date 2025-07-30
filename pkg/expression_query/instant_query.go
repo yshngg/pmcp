@@ -26,7 +26,7 @@ type InstantQueryArguments struct {
 
 type InstantQueryResult struct {
 	Value    model.Value `json:"value"`
-	Warnings v1.Warnings `json:"warnings"`
+	Warnings v1.Warnings `json:"warnings,omitempty"`
 }
 
 func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[InstantQueryArguments]) (*mcp.CallToolResultFor[InstantQueryResult], error) {
