@@ -66,8 +66,14 @@ func main() {
 	// Backwards Compatibility
 	if *transportType == "sse" {
 		slog.Warn("HTTP+SSE transport is deprecated. Please use Streamable HTTP instead.")
+
+		http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("pong"))
+		})
+
 		sseHandler := mcp.NewSSEHandler(func(request *http.Request) *mcp.Server { return server })
 		http.Handle("/mcp", sseHandler)
+
 		slog.Info("Listening on http://" + *mcpAddr)
 		if err := http.ListenAndServe(*mcpAddr, nil); err != nil {
 			slog.Error("listen and serve with HTTP+SSE transport", "err", err)
