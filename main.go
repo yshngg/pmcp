@@ -47,7 +47,10 @@ func main() {
 
 	if *transportType == "http" {
 		http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("pong"))
+			if _, err := w.Write([]byte("pong")); err != nil {
+				slog.Error("write pong", "err", err)
+				os.Exit(1)
+			}
 		})
 
 		// Run the server over Streamable HTTP
@@ -68,7 +71,10 @@ func main() {
 		slog.Warn("HTTP+SSE transport is deprecated. Please use Streamable HTTP instead.")
 
 		http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("pong"))
+			if _, err := w.Write([]byte("pong")); err != nil {
+				slog.Error("write pong", "err", err)
+				os.Exit(1)
+			}
 		})
 
 		sseHandler := mcp.NewSSEHandler(func(request *http.Request) *mcp.Server { return server })
