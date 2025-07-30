@@ -2,10 +2,12 @@ package expressionquery
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
+	"github.com/prometheus/common/model"
 )
 
 const InstantQueryEndpoint = "/query"
@@ -22,7 +24,10 @@ type InstantQueryArguments struct {
 	Limit   uint64        `json:"limit,omitzero" jsonschema:"<number>: Maximum number of returned series. Doesn't affect scalars or strings but truncates the number of series for matrices and vectors. Optional. 0 means disabled."`
 }
 
-type InstantQueryResult struct{}
+type InstantQueryResult struct {
+	Value    model.Value `json:"value"`
+	Warnings v1.Warnings `json:"warnings"`
+}
 
 func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[InstantQueryArguments]) (*mcp.CallToolResultFor[InstantQueryResult], error) {
 	var (
@@ -44,14 +49,23 @@ func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, _ *mcp.Serv
 		opts = append(opts, v1.WithLimit(params.Arguments.Limit))
 	}
 
-	q.Client.Query(
+	result := InstantQueryResult{}
+	if result.Value, result.Warnings, err = q.Client.Query(
 		ctx,
 		params.Arguments.Query,
 		ts,
 		opts...,
-	)
+	); err != nil {
+		return nil, err
+	}
+	content, err := json.Marshal(result)
+	if err != nil {
+		return nil, err
+	}
 	return &mcp.CallToolResultFor[InstantQueryResult]{
-		Content:           []mcp.Content{},
-		StructuredContent: InstantQueryResult{},
+		Content: []mcp.Content{&mcp.TextContent{
+			Text: string(content),
+		}},
+		StructuredContent: result,
 	}, nil
 }

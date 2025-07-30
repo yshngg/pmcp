@@ -2,10 +2,12 @@ package expressionquery
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
+	"github.com/prometheus/common/model"
 )
 
 const RangeQueryEndpoint = "/query_range"
@@ -26,7 +28,10 @@ type RangeQueryArguments struct {
 	Limit   uint64        `json:"limit,omitzero" jsonschema:"<number>: Maximum number of returned series. Optional. 0 means disabled."`
 }
 
-type RangeQueryResult struct{}
+type RangeQueryResult struct {
+	Value    model.Value `json:"value"`
+	Warnings v1.Warnings `json:"warnings"`
+}
 
 func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[RangeQueryArguments]) (*mcp.CallToolResultFor[RangeQueryResult], error) {
 	var (
@@ -54,7 +59,8 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 		opts = append(opts, v1.WithLimit(params.Arguments.Limit))
 	}
 
-	q.Client.QueryRange(
+	result := RangeQueryResult{}
+	if result.Value, result.Warnings, err = q.Client.QueryRange(
 		ctx,
 		params.Arguments.Query,
 		v1.Range{
@@ -63,9 +69,17 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 			Step:  params.Arguments.Step,
 		},
 		opts...,
-	)
+	); err != nil {
+		return nil, err
+	}
+	content, err := json.Marshal(result)
+	if err != nil {
+		return nil, err
+	}
 	return &mcp.CallToolResultFor[RangeQueryResult]{
-		Content:           []mcp.Content{},
-		StructuredContent: RangeQueryResult{},
+		Content: []mcp.Content{&mcp.TextContent{
+			Text: string(content),
+		}},
+		StructuredContent: result,
 	}, nil
 }
