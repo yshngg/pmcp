@@ -17,6 +17,8 @@ const InstantQueryEndpoint = "/query"
 // time=<rfc3339 | unix_timestamp>: Evaluation timestamp. Optional.
 // timeout=<duration>: Evaluation timeout. Optional. Defaults to and is capped by the value of the -query.timeout flag.
 // limit=<number>: Maximum number of returned series. Doesn’t affect scalars or strings but truncates the number of series for matrices and vectors. Optional. 0 means disabled.
+// The following example evaluates the expression up at the time 2015-07-01T20:10:51.781Z:
+// curl 'http://localhost:9090/api/v1/query?query=up&time=2015-07-01T20:10:51.781Z'
 type InstantQueryArguments struct {
 	Query   string        `json:"query" jsonschema:"<string>: Prometheus expression query string."`
 	Time    string        `json:"time,omitzero" jsonschema:"<rfc3339 | unix_timestamp>: Evaluation timestamp. Optional."`
@@ -25,7 +27,7 @@ type InstantQueryArguments struct {
 }
 
 type InstantQueryResult struct {
-	Value    model.Value `json:"value"`
+	Value    model.Value `json:"value" jsonschema:"<value> refers to the query result data, which has varying formats depending on the resultType. See the [expression query result formats](https://prometheus.io/docs/prometheus/latest/querying/api/#expression-query-result-formats)."`
 	Warnings v1.Warnings `json:"warnings,omitempty"`
 }
 
