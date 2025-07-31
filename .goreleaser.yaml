@@ -18,25 +18,42 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    
+    # GOOS list to build for.
+    # For more info refer to: https://pkg.go.dev/cmd/go#hdr-Environment_variables
+    #
+    # Default: [ 'darwin', 'linux', 'windows' ].
     goos:
       - linux
       - windows
       - darwin
 
+    # GOARCH to build for.
+    # For more info refer to: https://pkg.go.dev/cmd/go#hdr-Environment_variables
+    #
+    # Default: [ '386', 'amd64', 'arm64' ].
+    goarch:
+      - 386
+      - amd64
+      - arm64
+    
+    # List of combinations of GOOS + GOARCH + GOARM to ignore.
+    ignore:
+      - goos: darwin
+        goarch: 386
+
 archives:
   - formats: [tar.gz]
     # this name template makes the OS and Arch compatible with the results of `uname`.
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    name_template: "{{ .ProjectName }}-{{ .Version }}.{{ .Os }}-{{ .Arch }}"
     # use zip for windows archives
     format_overrides:
       - goos: windows
         formats: [zip]
+
+checksum:
+  # Disable the generation/upload of the checksum file.
+  disable: true
 
 changelog:
   sort: asc
@@ -46,6 +63,18 @@ changelog:
       - "^test:"
 
 release:
+  # You can change the name of the release.
+  #
+  # Default: '{{.Tag}}' ('{{.PrefixedTag}}' on Pro).
+  # Templates: allowed.
+  name_template: '{{ .Version }} / {{ .Now.Format "2006-01-02" }}'
+
+  # If set to auto, will mark the release as not ready for production
+  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
+  # If set to true, will mark the release as not ready for production.
+  # Default: false.
+  prerelease: auto
+
   footer: >-
 
     ---
