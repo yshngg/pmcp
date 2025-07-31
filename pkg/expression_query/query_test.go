@@ -1,41 +1,18 @@
 package expressionquery
 
 import (
-	"encoding/json"
-	"fmt"
-	"strconv"
 	"testing"
-	"time"
 
-	"github.com/modelcontextprotocol/go-sdk/jsonschema"
+	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 )
 
-type Foo struct {
-	Contents []string
+type dummyClient struct {
+	v1.API
 }
 
-func TestDemo(t *testing.T) {
-	foo := Foo{}
-	ret, err := json.Marshal(foo)
-	if err != nil {
-		t.Fatal(err)
+func TestNewExpressionQuerier(t *testing.T) {
+	q := NewExpressionQuerier(&dummyClient{})
+	if q == nil {
+		t.Fatal("expected non-nil ExpressionQuerier")
 	}
-	fmt.Println(string(ret))
-
-	schema, err := jsonschema.For[InstantQueryArguments]()
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Logf("Schema: %#v\n", schema)
-	t.Log(time.Now().Format(time.RFC3339))
-	_, err = time.Parse(time.RFC3339, "2025-07-28T14:50:38+08:00")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var ts time.Time
-	t.Logf("ts: %#v\n", ts.IsZero())
-
-	nw := 1 * time.Minute
-	t.Logf("nw: %#v\n", strconv.FormatFloat(nw.Seconds(), 'f', -1, 64))
 }

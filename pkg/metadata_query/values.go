@@ -8,6 +8,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
+	"github.com/yshngg/pmcp/pkg/utils"
 )
 
 const LabelValuesEndpoint = "/label/<label_name>/values"
@@ -39,17 +40,11 @@ func (q *metadataQuerier) LabelValuesHandler(ctx context.Context, session *mcp.S
 		start, end time.Time
 		err        error
 	)
-	if len(params.Arguments.Start) != 0 {
-		start, err = time.Parse(time.RFC3339, params.Arguments.Start)
-		if err != nil {
-			return nil, err
-		}
+	if start, err = utils.ParseTime(params.Arguments.Start); err != nil {
+		return nil, err
 	}
-	if len(params.Arguments.End) != 0 {
-		end, err = time.Parse(time.RFC3339, params.Arguments.End)
-		if err != nil {
-			return nil, err
-		}
+	if end, err = utils.ParseTime(params.Arguments.End); err != nil {
+		return nil, err
 	}
 
 	opts := make([]v1.Option, 0)
