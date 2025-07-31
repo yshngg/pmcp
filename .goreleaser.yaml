@@ -73,7 +73,7 @@ release:
   # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
   # If set to true, will mark the release as not ready for production.
   # Default: false.
-  prerelease: false
+  prerelease: true
 
   # If set to false, will NOT mark the release as "latest".
   # This prevents it from being shown at the top of the release list,
