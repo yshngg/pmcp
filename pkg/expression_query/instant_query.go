@@ -3,6 +3,7 @@ package expressionquery
 import (
 	"context"
 	"encoding/json"
+	"log/slog"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -38,7 +39,7 @@ func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, _ *mcp.Serv
 		err error
 	)
 	if ts, err = utils.ParseTime(params.Arguments.Time); err != nil {
-		return nil, err
+		slog.Warn("parse time", "err", err)
 	}
 
 	opts := make([]v1.Option, 0)

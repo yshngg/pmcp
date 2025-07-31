@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -44,10 +45,10 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 		err        error
 	)
 	if start, err = utils.ParseTime(params.Arguments.Start); err != nil {
-		return nil, err
+		slog.Warn("parse start time", "err", err)
 	}
 	if end, err = utils.ParseTime(params.Arguments.End); err != nil {
-		return nil, err
+		slog.Warn("parse end time", "err", err)
 	}
 
 	if params.Arguments.Step == 0 {
