@@ -6,6 +6,7 @@
 
 - Instant Query: Execute Prometheus queries at specific points in time
 - Range Query: Execute Prometheus queries over time ranges
+- Metadata Query: Discover series, label names, and label values
 - MCP Integration: Seamless integration with MCP-compatible clients
 - Multiple Transport Options: Support for HTTP, SSE, and stdio communication
 
@@ -36,18 +37,38 @@ pmcp --prom-addr="http://localhost:9090" --transport=stdio
 - `--mcp-addr`: MCP server listening address (default: localhost:8080)
 - `--transport`: Transport mechanism (stdio, http, sse) (default: stdio)
 
-### Available Tools
+## Available Tools
 
-1. **Prometheus Expression Query - Instant**
+### Expression query
 
-   - Execute queries at specific timestamps
-   - Get current metric values
-   - Perfect for real-time monitoring
+#### 1. Prometheus Instant Query
 
-2. **Prometheus Expression Query - Range**
-   - Query metrics over time ranges
-   - Analyze historical data
-   - Ideal for trend analysis
+- Execute queries at specific timestamps
+- Get current metric values
+- Perfect for real-time monitoring
+
+#### 2. Prometheus Range Query
+
+- Query metrics over time ranges
+- Analyze historical data
+- Ideal for trend analysis
+
+### Metadata query
+
+#### 1. Find Series by Labels
+
+- List all time series that match specific label filters
+- Discover which series exist for given label criteria
+
+#### 2. List Label Names
+
+- Get all label names used in the Prometheus database
+- Explore available labels for filtering or grouping
+
+#### 3. List Label Values
+
+- Get all possible values for a specific label name
+- See which values a label can take for filtering or selection
 
 ## Requirements
 
