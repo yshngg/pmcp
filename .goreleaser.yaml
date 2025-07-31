@@ -69,6 +69,11 @@ release:
   # Templates: allowed.
   name_template: '{{ .Version }} / {{ .Now.Format "2006-01-02" }}'
 
+  # If set to true, will not auto-publish the release.
+  # Note: all GitHub releases start as drafts while artifacts are uploaded.
+  # Available only for GitHub and Gitea.
+  draft: false
+
   # If set to auto, will mark the release as not ready for production
   # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
   # If set to true, will mark the release as not ready for production.
