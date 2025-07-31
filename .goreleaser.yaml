@@ -73,7 +73,17 @@ release:
   # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
   # If set to true, will mark the release as not ready for production.
   # Default: false.
-  prerelease: auto
+  prerelease: false
+
+  # If set to false, will NOT mark the release as "latest".
+  # This prevents it from being shown at the top of the release list,
+  # and from being returned when calling https://api.github.com/repos/OWNER/REPO/releases/latest.
+  #
+  # Available only for GitHub.
+  #
+  # Default: true.
+  # Templates: allowed. (Since v2.6)
+  make_latest: false
 
   footer: >-
 
