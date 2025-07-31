@@ -8,6 +8,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
+	"github.com/yshngg/pmcp/pkg/utils"
 )
 
 const InstantQueryEndpoint = "/query"
@@ -36,11 +37,8 @@ func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, _ *mcp.Serv
 		ts  time.Time
 		err error
 	)
-	if len(params.Arguments.Time) != 0 {
-		ts, err = time.Parse(time.RFC3339, params.Arguments.Time)
-		if err != nil {
-			return nil, err
-		}
+	if ts, err = utils.ParseTime(params.Arguments.Time); err != nil {
+		return nil, err
 	}
 
 	opts := make([]v1.Option, 0)

@@ -11,6 +11,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
+	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
 	"github.com/yshngg/pmcp/pkg/prometheus/client"
 )
 
@@ -37,7 +38,7 @@ func init() {
 func main() {
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "pmcp",
-		Version: "0.1.0-alpha",
+		Version: "0.2.0-alpha",
 	}, nil)
 
 	if err := AddTools(server); err != nil {
@@ -104,17 +105,41 @@ func AddTools(server *mcp.Server) error {
 	if err != nil {
 		return fmt.Errorf("new prometheus client, err: %w", err)
 	}
-	expressionQuerier := expressionquery.NewExpressionQuerier(promCli)
 
-	mcp.AddTool(server, &mcp.Tool{
-		Name:        "Prometheus Expression Query - Instant",
-		Description: "Execute a Prometheus query expression at a specific point in time to get the current value of a metric or calculation. Useful for checking the current state of systems and applications.",
-	}, expressionQuerier.InstantQueryHandler)
+	// Expression queries
+	// Query language expressions may be evaluated at a single instant or over a range of time.
+	{
+		expressionQuerier := expressionquery.NewExpressionQuerier(promCli)
+		mcp.AddTool(server, &mcp.Tool{
+			Name:        "Prometheus Instant Query",
+			Description: "Run a Prometheus expression and get the current value for a metric or calculation at a specific time. Use this to check the latest status or value of any metric.",
+		}, expressionQuerier.InstantQueryHandler)
 
-	mcp.AddTool(server, &mcp.Tool{
-		Name:        "Prometheus Expression Query - Range",
-		Description: "Execute a Prometheus query expression over a time range to get historical values of a metric or calculation. Useful for analyzing trends and patterns over time.",
-	}, expressionQuerier.RangeQueryHandler)
+		mcp.AddTool(server, &mcp.Tool{
+			Name:        "Prometheus Range Query",
+			Description: "Run a Prometheus expression over a time range to get historical values for a metric or calculation. Use this to analyze trends or patterns over time.",
+		}, expressionQuerier.RangeQueryHandler)
+	}
+
+	// Querying metadata
+	// Prometheus offers a set of API endpoints to query metadata about series and their labels.
+	{
+		metadataQuerier := metadataquery.NewMetadataQuerier(promCli)
+		mcp.AddTool(server, &mcp.Tool{
+			Name:        "Find Series by Labels",
+			Description: "List all time series that match specific label filters. Use this to discover which series exist for given label criteria.",
+		}, metadataQuerier.SeriesHandler)
+
+		mcp.AddTool(server, &mcp.Tool{
+			Name:        "List Label Names",
+			Description: "Get all label names used in the Prometheus database. Use this to explore available labels for filtering or grouping.",
+		}, metadataQuerier.LabelNamesHandler)
+
+		mcp.AddTool(server, &mcp.Tool{
+			Name:        "List Label Values",
+			Description: "Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.",
+		}, metadataQuerier.LabelValuesHandler)
+	}
 
 	return nil
 }

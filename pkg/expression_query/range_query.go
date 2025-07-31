@@ -9,6 +9,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
+	"github.com/yshngg/pmcp/pkg/utils"
 )
 
 const RangeQueryEndpoint = "/query_range"
@@ -42,18 +43,13 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 		step       time.Duration
 		err        error
 	)
-	if len(params.Arguments.Start) != 0 {
-		start, err = time.Parse(time.RFC3339, params.Arguments.Start)
-		if err != nil {
-			return nil, err
-		}
+	if start, err = utils.ParseTime(params.Arguments.Start); err != nil {
+		return nil, err
 	}
-	if len(params.Arguments.End) != 0 {
-		end, err = time.Parse(time.RFC3339, params.Arguments.End)
-		if err != nil {
-			return nil, err
-		}
+	if end, err = utils.ParseTime(params.Arguments.End); err != nil {
+		return nil, err
 	}
+
 	if params.Arguments.Step == 0 {
 		return nil, errors.New("step cannot be 0")
 	}
