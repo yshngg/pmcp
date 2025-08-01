@@ -5,7 +5,7 @@ BUILD_DATE := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 
 # Package and binary name
 BINARY := pmcp
-PACKAGE := github.com/yshngg/pmcp
+PACKAGE := $(shell go list -m)
 
 # Build flags
 LDFLAGS := -s -w
