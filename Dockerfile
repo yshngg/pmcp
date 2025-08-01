@@ -18,7 +18,8 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} \
     go build -o pmcp \
-    -ldflags="-s -w -X 'github.com/yshngg/pmcp/pkg/version.Number=${VERSION_NUMBER}' -X 'github.com/yshngg/pmcp/pkg/version.GitCommit=${GIT_COMMIT}' -X 'github.com/yshngg/pmcp/pkg/version.BuildDate=${BUILD_DATE}'"
+    -ldflags="-s -w -X 'github.com/yshngg/pmcp/pkg/version.Number=${VERSION_NUMBER}' -X 'github.com/yshngg/pmcp/pkg/version.GitCommit=${GIT_COMMIT}' -X 'github.com/yshngg/pmcp/pkg/version.BuildDate=${BUILD_DATE}'" \
+    .
 
 # Final image
 FROM alpine:3.22
