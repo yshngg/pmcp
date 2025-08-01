@@ -28,7 +28,7 @@ type LabelNamesArguments struct {
 }
 
 type LabelNamesResult struct {
-	// TODO: replace []string with model.LabelNames ?
+	// TODO: Replace []string with model.LabelNames (see https://github.com/prometheus/client_golang/pull/1850).
 	LabelNames []string    `json:"names" jsonschema:"Names is a list of string label names."`
 	Warnings   v1.Warnings `json:"warnings,omitempty"`
 }
