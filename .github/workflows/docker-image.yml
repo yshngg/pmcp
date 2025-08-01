@@ -67,6 +67,10 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
+          build-args: |
+            - VERSION_NUMBER=${{ steps.meta.outputs.version }}
+            - GIT_COMMIT=${{ steps.meta.outputs.revision }}
+            - BUILD_DATE="${{ steps.meta.outputs.created }}"
           platforms: ${{ matrix.platform }}
           context: .
           labels: ${{ steps.meta.outputs.labels }}
