@@ -13,6 +13,7 @@ import (
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
 	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
 	"github.com/yshngg/pmcp/pkg/prometheus/client"
+	"github.com/yshngg/pmcp/pkg/version"
 )
 
 // Schema is the identifier for the Prometheus schema.
@@ -25,6 +26,8 @@ var (
 	mcpAddr = flag.String("mcp-addr", "localhost:8080", "The address of the MCP server to listen on.")
 	// transportType specifies the transport mechanism (stdio, sse, or http).
 	transportType = flag.String("transport", "stdio", "Transport type (stdio, sse or http).\nThe mechanisms that handle the underlying communication between clients and servers.")
+	// printVersion prints the version and exit.
+	printVersion = flag.Bool("version", false, "Print the version and exit.")
 )
 
 func init() {
@@ -36,9 +39,14 @@ func init() {
 // It sets up the MCP server, registers Prometheus query tools, and starts the server
 // using the specified transport (stdio, http, or sse).
 func main() {
+	if *printVersion {
+		fmt.Println(version.Info)
+		os.Exit(0)
+	}
+
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "pmcp",
-		Version: "0.2.0-alpha",
+		Version: version.Info.Number,
 	}, nil)
 
 	if err := AddTools(server); err != nil {

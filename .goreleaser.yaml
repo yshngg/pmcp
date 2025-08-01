@@ -18,6 +18,19 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+
+    # Custom ldflags.
+    # For more info refer to: https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies
+    # and https://pkg.go.dev/cmd/link
+    #
+    # Default: '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser'.
+    # Templates: allowed.
+    ldflags:
+      - -s
+      - -w
+      - -X {{ .ModulePath }}/pkg/version.Number={{ .Version }}
+      - -X {{ .ModulePath }}/pkg/version.GitCommit={{ .Commit }}
+      - -X {{ .ModulePath }}/pkg/version.BuildDate={{ .Date }}
     
     # GOOS list to build for.
     # For more info refer to: https://pkg.go.dev/cmd/go#hdr-Environment_variables
