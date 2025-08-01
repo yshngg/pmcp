@@ -9,7 +9,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-      day: "sunday"
       time: "16:00"
 
   # Configuration for Docker base images
