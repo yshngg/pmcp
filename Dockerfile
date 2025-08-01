@@ -1,13 +1,17 @@
 # syntax=docker/dockerfile:1
 
+ARG VERSION_NUMBER=0.0.0-dev
+ARG GIT_COMMIT=unknown
+ARG BUILD_DATE=unknown
+
 # Build stage
 FROM --platform=$BUILDPLATFORM golang:1.24 AS builder
 
 ARG TARGETOS
 ARG TARGETARCH
-ARG VERSION_NUMBER=0.0.0-dev
-ARG GIT_COMMIT=unknown
-ARG BUILD_DATE=unknown
+ARG VERSION_NUMBER
+ARG GIT_COMMIT
+ARG BUILD_DATE
 
 WORKDIR /app
 
