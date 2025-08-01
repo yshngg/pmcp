@@ -25,6 +25,9 @@ var (
 )
 
 func init() {
+	if len(Number) == 0 {
+		return
+	}
 	Info = info{
 		Number:    Number,
 		GitCommit: GitCommit,
