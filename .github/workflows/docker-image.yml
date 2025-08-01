@@ -76,9 +76,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           build-args: |
-            - VERSION_NUMBER=${{ steps.build-args.outputs.VERSION_NUMBER }}
-            - GIT_COMMIT=${{ steps.build-args.outputs.GIT_COMMIT }}
-            - BUILD_DATE=${{ steps.build-args.outputs.BUILD_DATE }}
+            VERSION_NUMBER=${{ steps.build-args.outputs.VERSION_NUMBER }}
+            GIT_COMMIT=${{ steps.build-args.outputs.GIT_COMMIT }}
+            BUILD_DATE=${{ steps.build-args.outputs.BUILD_DATE }}
           platforms: ${{ matrix.platform }}
           context: .
           labels: ${{ steps.meta.outputs.labels }}
