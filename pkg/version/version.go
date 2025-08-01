@@ -25,12 +25,9 @@ var (
 )
 
 func init() {
-	if len(Number) == 0 {
-		return
-	}
-	Info = info{
-		Number:    Number,
-		GitCommit: GitCommit,
-		BuildDate: BuildDate,
+	if len(Number) != 0 {
+		Info.Number = Number
+		Info.GitCommit = GitCommit
+		Info.BuildDate = BuildDate
 	}
 }
