@@ -9,6 +9,7 @@ type Binder interface {
 	Bind()
 }
 
+// NewBinder returns a Binder that binds components to the given MCP server using the provided Prometheus client.
 func NewBinder(server *mcp.Server, promCli client.PrometheusClient) Binder {
 	return &binder{
 		server:  server,
