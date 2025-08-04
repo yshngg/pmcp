@@ -36,7 +36,7 @@ func init() {
 
 // main is the entry point for the pmcp server.
 // It sets up the MCP server, registers Prometheus query tools, and starts the server
-// using the specified transport (stdio, http, or sse).
+// main starts the MCP server with Prometheus query capabilities, selecting the transport mechanism (stdio, HTTP, or SSE) based on command-line flags. It initializes the Prometheus client, binds query handlers, and serves requests until termination. The function exits the program on critical errors or when printing version information.
 func main() {
 	if *printVersion {
 		fmt.Println(version.Info)
