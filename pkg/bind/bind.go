@@ -24,13 +24,13 @@ type binder struct {
 }
 
 func (b *binder) Bind() error {
-	if err := b.addTools(b.server); err != nil {
+	if err := b.addTools(); err != nil {
 		return fmt.Errorf("add tools, err: %w", err)
 	}
-	if err := b.addResources(b.server); err != nil {
+	if err := b.addResources(); err != nil {
 		return fmt.Errorf("add resources, err: %w", err)
 	}
-	if err := b.addPrompts(b.server); err != nil {
+	if err := b.addPrompts(); err != nil {
 		return fmt.Errorf("add prompts, err: %w", err)
 	}
 	return nil

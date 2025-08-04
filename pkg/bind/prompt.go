@@ -6,8 +6,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-func (b *binder) addPrompts(server *mcp.Server) error {
-	server.AddPrompt(&mcp.Prompt{
+func (b *binder) addPrompts() error {
+	b.server.AddPrompt(&mcp.Prompt{
 		Name:        "All Available Metrics",
 		Description: "List all available metrics in the Prometheus instance.",
 	}, func(ctx context.Context, ss *mcp.ServerSession, gpp *mcp.GetPromptParams) (*mcp.GetPromptResult, error) {
