@@ -18,7 +18,7 @@ var (
 	BuildDate string
 
 	Info = info{
-		Number:    "0.1.0",
+		Number:    "0.1.0-dev",
 		GitCommit: "HEAD",
 		BuildDate: "2006-01-02T15:04:05Z07:00",
 	}
