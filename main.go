@@ -55,10 +55,7 @@ func main() {
 	}
 
 	binder := bind.NewBinder(server, promCli)
-	if err := binder.Bind(); err != nil {
-		slog.Error("bind blocks", "err", err)
-		os.Exit(1)
-	}
+	binder.Bind()
 
 	if *transportType == "http" {
 		http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {

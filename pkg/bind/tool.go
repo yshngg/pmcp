@@ -8,9 +8,7 @@ import (
 
 // addTools registers Prometheus query tools with the MCP server.
 // It adds tools for expression queries (instant and range) and metadata queries.
-//
-// Returns an error if the Prometheus client cannot be created.
-func (b *binder) addTools() error {
+func (b *binder) addTools() {
 	// Expression queries
 	// Query language expressions may be evaluated at a single instant or over a range of time.
 	{
@@ -45,6 +43,4 @@ func (b *binder) addTools() error {
 			Description: "Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.",
 		}, metadataQuerier.LabelValuesHandler)
 	}
-
-	return nil
 }

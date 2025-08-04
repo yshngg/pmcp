@@ -6,7 +6,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-func (b *binder) addPrompts() error {
+func (b *binder) addPrompts() {
 	b.server.AddPrompt(&mcp.Prompt{
 		Name:        "All Available Metrics",
 		Description: "List all available metrics in the Prometheus instance.",
@@ -22,5 +22,4 @@ func (b *binder) addPrompts() error {
 			},
 		}, nil
 	})
-	return nil
 }
