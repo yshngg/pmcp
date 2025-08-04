@@ -8,12 +8,13 @@ import (
 
 func (b *binder) addPrompts(server *mcp.Server) error {
 	server.AddPrompt(&mcp.Prompt{
-		Name: "All Available Metrics",
+		Name:        "All Available Metrics",
+		Description: "List all available metrics in the Prometheus instance.",
 	}, func(ctx context.Context, ss *mcp.ServerSession, gpp *mcp.GetPromptParams) (*mcp.GetPromptResult, error) {
 		return &mcp.GetPromptResult{
-			Description: "What is the current value of a metric or calculation?",
 			Messages: []*mcp.PromptMessage{
 				{
+					Role: "assistant",
 					Content: &mcp.TextContent{
 						Text: "List All Available Metrics is Equivalent to List Values of __name__ Label",
 					},
