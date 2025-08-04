@@ -11,7 +11,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/yshngg/pmcp/pkg/bind"
-	"github.com/yshngg/pmcp/pkg/prometheus/client"
+	"github.com/yshngg/pmcp/pkg/prometheus/api"
 	"github.com/yshngg/pmcp/pkg/version"
 )
 
@@ -50,7 +50,7 @@ func main() {
 		Version: version.Info.Number,
 	}, nil)
 
-	promCli, err := client.New(*promAddr, http.DefaultClient, nil)
+	promCli, err := api.New(*promAddr, http.DefaultClient, nil)
 	if err != nil {
 		slog.Error("new prometheus client", "err", err)
 		os.Exit(1)

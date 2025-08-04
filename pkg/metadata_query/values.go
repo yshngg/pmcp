@@ -54,7 +54,7 @@ func (q *metadataQuerier) LabelValuesHandler(ctx context.Context, session *mcp.S
 	}
 
 	result := LabelValuesResult{}
-	result.LabelValues, result.Warnings, err = q.Client.LabelValues(
+	result.LabelValues, result.Warnings, err = q.API.LabelValues(
 		ctx,
 		params.Arguments.Label,
 		params.Arguments.Match,

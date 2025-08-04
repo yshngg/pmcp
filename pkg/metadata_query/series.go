@@ -51,7 +51,7 @@ func (q *metadataQuerier) SeriesHandler(ctx context.Context, session *mcp.Server
 	}
 
 	result := SeriesResult{}
-	result.LabelSets, result.Warnings, err = q.Client.Series(
+	result.LabelSets, result.Warnings, err = q.API.Series(
 		ctx,
 		params.Arguments.Match,
 		start,

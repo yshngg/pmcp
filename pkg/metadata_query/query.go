@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/pkg/prometheus/client"
+	"github.com/yshngg/pmcp/pkg/prometheus/api"
 )
 
 type MetadataQuerier interface {
@@ -13,12 +13,12 @@ type MetadataQuerier interface {
 	LabelValuesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelValuesArguments]) (*mcp.CallToolResultFor[LabelValuesResult], error)
 }
 
-func NewMetadataQuerier(cli client.PrometheusClient) MetadataQuerier {
-	return &metadataQuerier{Client: cli}
+func NewMetadataQuerier(api api.PrometheusAPI) MetadataQuerier {
+	return &metadataQuerier{API: api}
 }
 
 type metadataQuerier struct {
-	Client client.PrometheusClient
+	API api.PrometheusAPI
 }
 
 var _ MetadataQuerier = &metadataQuerier{}

@@ -51,7 +51,7 @@ func (q *metadataQuerier) LabelNamesHandler(ctx context.Context, session *mcp.Se
 	}
 
 	result := LabelNamesResult{}
-	if result.LabelNames, result.Warnings, err = q.Client.LabelNames(
+	if result.LabelNames, result.Warnings, err = q.API.LabelNames(
 		ctx,
 		params.Arguments.Match,
 		start,
