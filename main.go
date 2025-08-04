@@ -10,8 +10,7 @@ import (
 	"os"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
-	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
+	"github.com/yshngg/pmcp/pkg/bind"
 	"github.com/yshngg/pmcp/pkg/prometheus/client"
 	"github.com/yshngg/pmcp/pkg/version"
 )
@@ -35,9 +34,11 @@ func init() {
 	flag.Parse()
 }
 
-// main is the entry point for the pmcp server.
-// It sets up the MCP server, registers Prometheus query tools, and starts the server
-// using the specified transport (stdio, http, or sse).
+// main starts the MCP server with Prometheus query capabilities,
+// selecting the transport mechanism (stdio, HTTP, or SSE) based on command-line flags.
+// It initializes the Prometheus client, binds query handlers,
+// and serves requests until termination.
+// The function exits the program on critical errors or when printing version information.
 func main() {
 	if *printVersion {
 		fmt.Println(version.Info)
@@ -49,10 +50,14 @@ func main() {
 		Version: version.Info.Number,
 	}, nil)
 
-	if err := AddTools(server); err != nil {
-		slog.Error("add tools", "err", err)
+	promCli, err := client.New(*promAddr, http.DefaultClient, nil)
+	if err != nil {
+		slog.Error("new prometheus client", "err", err)
 		os.Exit(1)
 	}
+
+	binder := bind.NewBinder(server, promCli)
+	binder.Bind()
 
 	if *transportType == "http" {
 		http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
@@ -102,52 +107,4 @@ func main() {
 		slog.Error("run server with stdio transport", "err", err)
 		os.Exit(1)
 	}
-}
-
-// AddTools registers Prometheus query tools with the given MCP server.
-// It creates a Prometheus client and adds instant and range query handlers.
-//
-// Returns an error if the Prometheus client cannot be created.
-func AddTools(server *mcp.Server) error {
-	promCli, err := client.New(*promAddr, http.DefaultClient, nil)
-	if err != nil {
-		return fmt.Errorf("new prometheus client, err: %w", err)
-	}
-
-	// Expression queries
-	// Query language expressions may be evaluated at a single instant or over a range of time.
-	{
-		expressionQuerier := expressionquery.NewExpressionQuerier(promCli)
-		mcp.AddTool(server, &mcp.Tool{
-			Name:        "Prometheus Instant Query",
-			Description: "Run a Prometheus expression and get the current value for a metric or calculation at a specific time. Use this to check the latest status or value of any metric.",
-		}, expressionQuerier.InstantQueryHandler)
-
-		mcp.AddTool(server, &mcp.Tool{
-			Name:        "Prometheus Range Query",
-			Description: "Run a Prometheus expression over a time range to get historical values for a metric or calculation. Use this to analyze trends or patterns over time.",
-		}, expressionQuerier.RangeQueryHandler)
-	}
-
-	// Querying metadata
-	// Prometheus offers a set of API endpoints to query metadata about series and their labels.
-	{
-		metadataQuerier := metadataquery.NewMetadataQuerier(promCli)
-		mcp.AddTool(server, &mcp.Tool{
-			Name:        "Find Series by Labels",
-			Description: "List all time series that match specific label filters. Use this to discover which series exist for given label criteria.",
-		}, metadataQuerier.SeriesHandler)
-
-		mcp.AddTool(server, &mcp.Tool{
-			Name:        "List Label Names",
-			Description: "Get all label names used in the Prometheus database. Use this to explore available labels for filtering or grouping.",
-		}, metadataQuerier.LabelNamesHandler)
-
-		mcp.AddTool(server, &mcp.Tool{
-			Name:        "List Label Values",
-			Description: "Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.",
-		}, metadataQuerier.LabelValuesHandler)
-	}
-
-	return nil
 }
