@@ -33,7 +33,7 @@ type SeriesResult struct {
 	Warnings  v1.Warnings      `json:"warnings,omitempty"`
 }
 
-func (q *metadataQuerier) SeriesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[SeriesArguments]) (*mcp.CallToolResultFor[SeriesResult], error) {
+func (q *metadataQuerier) SeriesHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[SeriesArguments]) (*mcp.CallToolResultFor[SeriesResult], error) {
 	var (
 		start, end time.Time
 		err        error

@@ -36,7 +36,7 @@ type LabelValuesResult struct {
 	Warnings    v1.Warnings       `json:"warnings,omitempty"`
 }
 
-func (q *metadataQuerier) LabelValuesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelValuesArguments]) (*mcp.CallToolResultFor[LabelValuesResult], error) {
+func (q *metadataQuerier) LabelValuesHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelValuesArguments]) (*mcp.CallToolResultFor[LabelValuesResult], error) {
 	var (
 		start, end time.Time
 		err        error
