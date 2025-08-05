@@ -5,6 +5,7 @@ import (
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
 	"github.com/yshngg/pmcp/pkg/manage"
 	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
+	targetdiscover "github.com/yshngg/pmcp/pkg/target_discover"
 )
 
 // addTools registers Prometheus query tools with the MCP server.
@@ -43,6 +44,16 @@ func (b *binder) addTools() {
 			Name:        "List Label Values",
 			Description: "Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.",
 		}, metadataQuerier.LabelValuesHandler)
+	}
+
+	// Targets
+	// An overview of the current state of the Prometheus target discovery.
+	{
+		targetDiscoverer := targetdiscover.NewTargetDiscoverer(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Target Discovery",
+			Description: "Get an overview of the current state of the Prometheus target discovery.",
+		}, targetDiscoverer.TargetDiscoverHandler)
 	}
 
 	// Management API
