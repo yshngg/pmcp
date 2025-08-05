@@ -62,13 +62,13 @@ func (d *targetDiscoverer) TargetDiscoverHandler(ctx context.Context, _ *mcp.Ser
 		result.Active = activeTargets
 	}
 
-	context, err := json.Marshal(result)
+	content, err := json.Marshal(result)
 	if err != nil {
 		return nil, err
 	}
 
 	return &mcp.CallToolResultFor[TargetDiscoverResult]{
-		Content:           []mcp.Content{&mcp.TextContent{Text: string(context)}},
+		Content:           []mcp.Content{&mcp.TextContent{Text: string(content)}},
 		StructuredContent: result,
 	}, nil
 }
