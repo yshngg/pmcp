@@ -33,34 +33,36 @@ func (d *targetDiscoverer) TargetDiscoverHandler(ctx context.Context, _ *mcp.Ser
 		return nil, err
 	}
 
-	// Filter by state
-	if len(params.Arguments.State) == 0 {
-		params.Arguments.State = TargetStateAny
-	}
-	switch params.Arguments.State {
-	case TargetStateActive:
-		result.Dropped = nil
-	case TargetStateDropped:
-		result.Active = nil
-	case TargetStateAny:
-		break
-	default:
-		return nil, fmt.Errorf("invalid state: %s, must be active, dropped or any", params.Arguments.State)
-	}
-
-	// Filter by scrape pool
+	// Filter by scrape pool, which only affects active targets.
 	scrapePool := params.Arguments.ScrapePool
 	if len(scrapePool) != 0 {
 		// Dropped targets don't have scrape pool field
 		result.Dropped = nil
 
-		activeTargets := []v1.ActiveTarget{}
+		n := 0
 		for _, v := range result.Active {
 			if v.ScrapePool == scrapePool {
-				activeTargets = append(activeTargets, v)
+				result.Active[n] = v
+				n++
 			}
 		}
-		result.Active = activeTargets
+		result.Active = result.Active[:n]
+	}
+
+	// Filter by state
+	state := params.Arguments.State
+	if len(state) == 0 {
+		state = TargetStateAny
+	}
+	switch state {
+	case TargetStateActive:
+		result.Dropped = nil
+	case TargetStateDropped:
+		result.Active = nil
+	case TargetStateAny:
+		// keep both active and dropped targets
+	default:
+		return nil, fmt.Errorf("invalid state: %s, must be active, dropped or any", params.Arguments.State)
 	}
 
 	content, err := json.Marshal(result)
