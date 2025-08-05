@@ -19,8 +19,8 @@ import (
 //	    --data-urlencode 'match_target={job="prometheus"}' \
 //	    --data-urlencode 'limit=2'
 type TargetMetadataQueryParams struct {
-	MatchTarget string `json:"matchTarget,omitzero" jsonschema:"<label_selectors>: Label selectors that match targets by their label sets. All targets are selected if left empty."`
-	Metric      string `json:"metrics,omitzero" jsonschema:"<string>: A metric name to retrieve metadata for. All metric metadata is retrieved if left empty."`
+	MatchTarget string `json:"match_target,omitzero" jsonschema:"<label_selectors>: Label selectors that match targets by their label sets. All targets are selected if left empty."`
+	Metric      string `json:"metric,omitzero" jsonschema:"<string>: A metric name to retrieve metadata for. All metric metadata is retrieved if left empty."`
 	Limit       string `json:"limit,omitzero" jsonschema:"<number>: Maximum number of targets to match."`
 }
 

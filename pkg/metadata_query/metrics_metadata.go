@@ -16,7 +16,7 @@ import (
 // curl -G http://localhost:9090/api/v1/metadata?limit=2
 type MetricsMetadataQueryParams struct {
 	Limit  string `json:"limit,omitzero" jsonschema:"<number>: Maximum number of metrics to return."`
-	Metric string `json:"metrics,omitzero" jsonschema:"<string>: A metric name to filter metadata for. All metric metadata is retrieved if left empty."`
+	Metric string `json:"metric,omitzero" jsonschema:"<string>: A metric name to filter metadata for. All metric metadata is retrieved if left empty."`
 }
 
 type MetricsMetadataQueryResult struct {
