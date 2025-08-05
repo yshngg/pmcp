@@ -44,6 +44,16 @@ func (b *binder) addTools() {
 			Name:        "List Label Values",
 			Description: "Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.",
 		}, metadataQuerier.LabelValuesHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Target Metadata Query",
+			Description: "Get metadata about metrics currently scraped from targets.",
+		}, metadataQuerier.TargetMetadataQueryHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Metric Metadata Query",
+			Description: "Get metadata about metrics currently scraped from targets. However, it does not provide any target information.",
+		}, metadataQuerier.MetricsMetadataQueryHandler)
 	}
 
 	// Targets
