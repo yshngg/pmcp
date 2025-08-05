@@ -33,11 +33,11 @@ pmcp --prom-addr="http://localhost:9090" --transport=stdio
 
 ### Command Line Flags
 
-- `-mcp-addr`: The address of the MCP server to listen on. (default "localhost:8080")
-- `-prom-addr`: The address of the Prometheus to connect to. (default "http://localhost:9090/")
-- `-transport`: Transport type (stdio, sse or http).
-- `-version`: Display the version and exit.
 - `-help`: Display help message.
+- `-mcp-addr`: The address of the MCP server to listen on. (default: localhost:8080)
+- `-prom-addr`: The address of the Prometheus to connect to. (default: <http://localhost:9090/>)
+- `-transport`: Transport type (stdio, sse or http). (default: stdio)
+- `-version`: Display the version and exit.
 
 ## Available Tools
 
