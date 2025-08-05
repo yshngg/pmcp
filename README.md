@@ -1,114 +1,115 @@
 # PMCP - Prometheus Model Context Protocol Server
 
-🚀 A Model Context Protocol (MCP) server implementation for Prometheus that enables natural language interactions with Prometheus metrics and queries.
+**🚀 A Model Context Protocol (MCP) server implementation for Prometheus that enables natural language interactions with Prometheus metrics and queries.**
+
+---
+
+## Table of Contents
+
+1. [Features](#features)
+2. [Requirements](#requirements)
+3. [Installation](#installation)
+4. [Usage](#usage)
+   * [Command Line Flags](#command-line-flags)
+5. [Binding Blocks](#binding-blocks)
+   * [Tools](#tools)
+   * [Prompts](#prompts)
+6. [Contributing](#contributing)
+7. [License](#license)
+8. [Acknowledgments](#acknowledgments)
+
+---
 
 ## Features
 
-- Instant Query: Execute Prometheus queries at specific points in time
-- Range Query: Execute Prometheus queries over time ranges
-- Metadata Query: Discover series, label names, and label values
-- MCP Integration: Seamless integration with MCP-compatible clients
-- Multiple Transport Options: Support for HTTP, SSE, and stdio communication
+* **Instant Query**: Execute Prometheus queries at a specific point in time.
+* **Range Query**: Retrieve historical metric data over defined time ranges.
+* **Metadata Query**: Discover time series, label names, and label values.
+* **Transport Options**: Support for HTTP, Server-Sent Events (SSE), and stdio.
+* **MCP Integration**: Seamless communication with MCP-compatible clients.
+
+---
+
+## Requirements
+
+* Go **1.23.5** or higher
+* A running Prometheus server (v2.x)
+
+---
 
 ## Installation
+
+Install the `pmcp` binary via `go install`:
 
 ```bash
 go install github.com/yshngg/pmcp@latest
 ```
 
+Ensure `$GOPATH/bin` is in your `$PATH`.
+
+---
+
 ## Usage
 
-Start the PMCP server by providing your Prometheus server address:
+Run the server by specifying your Prometheus address and preferred transport:
 
 ```bash
-# Basic usage with default settings
+# Default (stdio transport)
 pmcp --prom-addr="http://localhost:9090"
 
-# Using HTTP transport
+# HTTP transport
 pmcp --prom-addr="http://localhost:9090" --transport=http --mcp-addr="localhost:8080"
 
-# Using stdio transport (default)
-pmcp --prom-addr="http://localhost:9090" --transport=stdio
+# SSE transport
+pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8080"
 ```
 
 ### Command Line Flags
 
-- `-help`: Display help message.
-- `-mcp-addr`: The address of the MCP server to listen on. (default: localhost:8080)
-- `-prom-addr`: The address of the Prometheus to connect to. (default: <http://localhost:9090/>)
-- `-transport`: Transport type (stdio, sse or http). (default: stdio)
-- `-version`: Display the version and exit.
+| Flag         | Description                                       | Default                 |
+| ------------ | ------------------------------------------------- | ----------------------- |
+| `-help`      | Show help information.                            | N/A                     |
+| `-mcp-addr`  | Address for the MCP server to listen on.          | `localhost:8080`        |
+| `-prom-addr` | Prometheus server URL.                            | `http://localhost:9090` |
+| `-transport` | Communication transport (`stdio`, `http`, `sse`). | `stdio`                 |
+| `-version`   | Print version and exit.                           | N/A                     |
 
-## Available Tools
+---
 
-### Expression Query
+## Binding Blocks
 
-#### 1. Prometheus Instant Query
+### Tools
 
-Run a Prometheus expression and get the current value for a metric or calculation at a specific time. Use this to check the latest status or value of any metric.
+* **Instant Query**: Retrieve the current value of a metric or calculation at a given timestamp.
+* **Range Query**: Fetch metric values over a specified time interval for trend analysis.
+* **Find Series by Labels**: List all time series matching specific label filters.
+* **List Label Names**: Retrieve all label names in the Prometheus database.
+* **List Label Values**: Get all possible values for a particular label name.
+* **Target Discovery**: Overview of currently discovered Prometheus targets and their statuses.
+* **Health Check**: Verify if Prometheus is responding.
+* **Readiness Check**: Determine if Prometheus is ready to serve queries.
+* **Reload**: Trigger configuration and rule file reload.
+* **Quit**: Gracefully shut down Prometheus.
 
-#### 2. Prometheus Range Query
+### Prompts
 
-Run a Prometheus expression over a time range to get historical values for a metric or calculation. Use this to analyze trends or patterns over time.
+* **All Available Metrics**: Return a list of every metric exposed by the Prometheus instance.
 
-### Metadata Query
-
-#### 1. Find Series by Labels
-
-List all time series that match specific label filters. Use this to discover which series exist for given label criteria.
-
-#### 2. List Label Names
-
-Get all label names used in the Prometheus database. Use this to explore available labels for filtering or grouping.
-
-#### 3. List Label Values
-
-Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.
-
-### Target Descover
-
-#### 1. Target Discovery
-
-Get an overview of the current state of the Prometheus target discovery.
-
-### Management API
-
-#### 1. Health Check
-
-Check whether Prometheus is healthy.
-
-#### 2. Readiness Check
-
-Check whether Prometheus is ready to serve traffic.
-
-#### 3. Reload
-
-Trigger a reload of the Prometheus configuration and rule files.
-
-#### 4. Quit
-
-Trigger a graceful shutdown of Prometheus.
-
-## Available Prompts
-
-#### All Available Metrics
-
-List all available metrics in the Prometheus instance.
-
-## Requirements
-
-- Go 1.23.5 or higher
-- Access to a running Prometheus server
+---
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please submit a pull request or open an issue to discuss improvements.
+
+---
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+
+---
 
 ## Acknowledgments
 
-- Built with [Model Context Protocol](https://github.com/modelcontextprotocol/go-sdk)
-- Powered by [Prometheus](https://prometheus.io/)
+* Built with [Model Context Protocol](https://github.com/modelcontextprotocol/go-sdk)
+* Powered by [Prometheus](https://prometheus.io/)
