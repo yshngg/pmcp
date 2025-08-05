@@ -35,14 +35,14 @@ func NewManagementAPI(cli api.Client) ManagementAPI {
 // GET /-/healthy
 // HEAD /-/healthy
 func (m *managementAPI) HealthCheck(ctx context.Context) error {
-	resp, _, err := m.cli.Do(ctx, &http.Request{
+	resp, body, err := m.cli.Do(ctx, &http.Request{
 		URL: m.cli.URL(epHealthCheck, nil),
 	})
 	if err != nil {
 		return fmt.Errorf("health check, err: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("unhealthy")
+		return errors.New(string(body))
 	}
 	return nil
 }
@@ -51,14 +51,14 @@ func (m *managementAPI) HealthCheck(ctx context.Context) error {
 // GET /-/ready
 // HEAD /-/ready
 func (m *managementAPI) ReadinessCheck(ctx context.Context) error {
-	resp, _, err := m.cli.Do(ctx, &http.Request{
+	resp, body, err := m.cli.Do(ctx, &http.Request{
 		URL: m.cli.URL(epReadinessCheck, nil),
 	})
 	if err != nil {
 		return fmt.Errorf("readiness check, err: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("not ready")
+		return errors.New(string(body))
 	}
 	return nil
 }
@@ -68,14 +68,15 @@ func (m *managementAPI) ReadinessCheck(ctx context.Context) error {
 // PUT  /-/reload
 // POST /-/reload
 func (m *managementAPI) Reload(ctx context.Context) error {
-	resp, _, err := m.cli.Do(ctx, &http.Request{
-		URL: m.cli.URL(epReload, nil),
+	resp, body, err := m.cli.Do(ctx, &http.Request{
+		Method: http.MethodPut,
+		URL:    m.cli.URL(epReload, nil),
 	})
 	if err != nil {
 		return fmt.Errorf("reload configuration and rule files, err: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("reload failed, please check if the reload feature is enabled with --web.enable-lifecycle")
+		return errors.New(string(body))
 	}
 	return nil
 }
@@ -85,14 +86,15 @@ func (m *managementAPI) Reload(ctx context.Context) error {
 // PUT  /-/quit
 // POST /-/quit
 func (m *managementAPI) Quit(ctx context.Context) error {
-	resp, _, err := m.cli.Do(ctx, &http.Request{
-		URL: m.cli.URL(epQuit, nil),
+	resp, body, err := m.cli.Do(ctx, &http.Request{
+		Method: http.MethodPut,
+		URL:    m.cli.URL(epQuit, nil),
 	})
 	if err != nil {
 		return fmt.Errorf("graceful shutdown, err: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("quit failed, please check if the quit feature is enabled with --web.enable-lifecycle")
+		return errors.New(string(body))
 	}
 	return nil
 }
