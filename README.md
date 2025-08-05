@@ -33,9 +33,11 @@ pmcp --prom-addr="http://localhost:9090" --transport=stdio
 
 ### Command Line Flags
 
-- `--prom-addr`: Prometheus server address (default: http://localhost:9090/)
-- `--mcp-addr`: MCP server listening address (default: localhost:8080)
-- `--transport`: Transport mechanism (stdio, http, sse) (default: stdio)
+- `-help`: Display help message.
+- `-mcp-addr`: The address of the MCP server to listen on. (default: localhost:8080)
+- `-prom-addr`: The address of the Prometheus to connect to. (default: <http://localhost:9090/>)
+- `-transport`: Transport type (stdio, sse or http). (default: stdio)
+- `-version`: Display the version and exit.
 
 ## Available Tools
 
@@ -43,32 +45,49 @@ pmcp --prom-addr="http://localhost:9090" --transport=stdio
 
 #### 1. Prometheus Instant Query
 
-- Execute queries at specific timestamps
-- Get current metric values
-- Perfect for real-time monitoring
+Run a Prometheus expression and get the current value for a metric or calculation at a specific time. Use this to check the latest status or value of any metric.
 
 #### 2. Prometheus Range Query
 
-- Query metrics over time ranges
-- Analyze historical data
-- Ideal for trend analysis
+Run a Prometheus expression over a time range to get historical values for a metric or calculation. Use this to analyze trends or patterns over time.
 
 ### Metadata query
 
 #### 1. Find Series by Labels
 
-- List all time series that match specific label filters
-- Discover which series exist for given label criteria
+List all time series that match specific label filters. Use this to discover which series exist for given label criteria.
 
 #### 2. List Label Names
 
-- Get all label names used in the Prometheus database
-- Explore available labels for filtering or grouping
+Get all label names used in the Prometheus database. Use this to explore available labels for filtering or grouping.
 
 #### 3. List Label Values
 
-- Get all possible values for a specific label name
-- See which values a label can take for filtering or selection
+Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.
+
+### Management API
+
+#### 1. Health Check
+
+Check whether Prometheus is healthy.
+
+#### 2. Readiness Check
+
+Check whether Prometheus is ready to serve traffic.
+
+#### 3. Reload
+
+Trigger a reload of the Prometheus configuration and rule files.
+
+#### 4. Quit
+
+Trigger a graceful shutdown of Prometheus.
+
+## Available Prompts
+
+#### All Available Metrics
+
+List all available metrics in the Prometheus instance.
 
 ## Requirements
 
