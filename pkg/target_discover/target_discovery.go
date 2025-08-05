@@ -51,6 +51,7 @@ func (d *targetDiscoverer) TargetDiscoverHandler(ctx context.Context, _ *mcp.Ser
 	// Filter by scrape pool
 	scrapePool := params.Arguments.ScrapePool
 	if len(scrapePool) != 0 {
+		// Dropped targets don't have scrape pool field
 		result.Dropped = nil
 
 		activeTargets := []v1.ActiveTarget{}
