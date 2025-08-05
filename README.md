@@ -41,7 +41,7 @@ pmcp --prom-addr="http://localhost:9090" --transport=stdio
 
 ## Available Tools
 
-### Expression query
+### Expression Query
 
 #### 1. Prometheus Instant Query
 
@@ -51,7 +51,7 @@ Run a Prometheus expression and get the current value for a metric or calculatio
 
 Run a Prometheus expression over a time range to get historical values for a metric or calculation. Use this to analyze trends or patterns over time.
 
-### Metadata query
+### Metadata Query
 
 #### 1. Find Series by Labels
 
@@ -64,6 +64,12 @@ Get all label names used in the Prometheus database. Use this to explore availab
 #### 3. List Label Values
 
 Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.
+
+### Target Descover
+
+#### 1. Target Discovery
+
+Get an overview of the current state of the Prometheus target discovery.
 
 ### Management API
 
