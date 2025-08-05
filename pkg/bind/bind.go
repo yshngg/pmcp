@@ -2,7 +2,7 @@ package bind
 
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/pkg/prometheus/client"
+	"github.com/yshngg/pmcp/pkg/prometheus/api"
 )
 
 type Binder interface {
@@ -10,16 +10,16 @@ type Binder interface {
 }
 
 // NewBinder returns a Binder that binds components to the given MCP server using the provided Prometheus client.
-func NewBinder(server *mcp.Server, promCli client.PrometheusClient) Binder {
+func NewBinder(server *mcp.Server, api api.PrometheusAPI) Binder {
 	return &binder{
-		server:  server,
-		promCli: promCli,
+		server: server,
+		api:    api,
 	}
 }
 
 type binder struct {
-	server  *mcp.Server
-	promCli client.PrometheusClient
+	server *mcp.Server
+	api    api.PrometheusAPI
 }
 
 func (b *binder) Bind() {

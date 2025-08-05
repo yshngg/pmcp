@@ -33,7 +33,7 @@ type SeriesResult struct {
 	Warnings  v1.Warnings      `json:"warnings,omitempty"`
 }
 
-func (q *metadataQuerier) SeriesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[SeriesArguments]) (*mcp.CallToolResultFor[SeriesResult], error) {
+func (q *metadataQuerier) SeriesHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[SeriesArguments]) (*mcp.CallToolResultFor[SeriesResult], error) {
 	var (
 		start, end time.Time
 		err        error
@@ -51,7 +51,7 @@ func (q *metadataQuerier) SeriesHandler(ctx context.Context, session *mcp.Server
 	}
 
 	result := SeriesResult{}
-	result.LabelSets, result.Warnings, err = q.Client.Series(
+	result.LabelSets, result.Warnings, err = q.API.Series(
 		ctx,
 		params.Arguments.Match,
 		start,

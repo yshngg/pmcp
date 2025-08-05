@@ -1,4 +1,4 @@
-package client
+package api
 
 import (
 	"fmt"
@@ -10,11 +10,17 @@ import (
 
 const APIVersion = "/api/v1"
 
-type PrometheusClient interface {
-	v1.API
+type PrometheusAPI interface {
+	QueryingAPI
+	ManagementAPI
 }
 
-func New(addr string, client *http.Client, roundTripper http.RoundTripper) (PrometheusClient, error) {
+type prometheusAPI struct {
+	QueryingAPI
+	ManagementAPI
+}
+
+func New(addr string, client *http.Client, roundTripper http.RoundTripper) (PrometheusAPI, error) {
 	cli, err := api.NewClient(api.Config{
 		Address:      addr,
 		Client:       client,
@@ -24,5 +30,8 @@ func New(addr string, client *http.Client, roundTripper http.RoundTripper) (Prom
 		return nil, fmt.Errorf("new client, err: %w", err)
 	}
 
-	return v1.NewAPI(cli), nil
+	return &prometheusAPI{
+		QueryingAPI:   v1.NewAPI(cli),
+		ManagementAPI: NewManagementAPI(cli),
+	}, nil
 }

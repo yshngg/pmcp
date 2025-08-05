@@ -33,7 +33,7 @@ type LabelNamesResult struct {
 	Warnings   v1.Warnings `json:"warnings,omitempty"`
 }
 
-func (q *metadataQuerier) LabelNamesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelNamesArguments]) (*mcp.CallToolResultFor[LabelNamesResult], error) {
+func (q *metadataQuerier) LabelNamesHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelNamesArguments]) (*mcp.CallToolResultFor[LabelNamesResult], error) {
 	var (
 		start, end time.Time
 		err        error
@@ -51,7 +51,7 @@ func (q *metadataQuerier) LabelNamesHandler(ctx context.Context, session *mcp.Se
 	}
 
 	result := LabelNamesResult{}
-	if result.LabelNames, result.Warnings, err = q.Client.LabelNames(
+	if result.LabelNames, result.Warnings, err = q.API.LabelNames(
 		ctx,
 		params.Arguments.Match,
 		start,

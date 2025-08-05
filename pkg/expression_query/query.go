@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/pkg/prometheus/client"
+	"github.com/yshngg/pmcp/pkg/prometheus/api"
 )
 
 type ExpressionQuerier interface {
@@ -12,12 +12,12 @@ type ExpressionQuerier interface {
 	RangeQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[RangeQueryArguments]) (*mcp.CallToolResultFor[RangeQueryResult], error)
 }
 
-func NewExpressionQuerier(cli client.PrometheusClient) ExpressionQuerier {
-	return &expressionQuerier{Client: cli}
+func NewExpressionQuerier(api api.PrometheusAPI) ExpressionQuerier {
+	return &expressionQuerier{API: api}
 }
 
 type expressionQuerier struct {
-	Client client.PrometheusClient
+	API api.PrometheusAPI
 }
 
 var _ ExpressionQuerier = &expressionQuerier{}

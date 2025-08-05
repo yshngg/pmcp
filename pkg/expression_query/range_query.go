@@ -65,7 +65,7 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 	}
 
 	result := RangeQueryResult{}
-	if result.Value, result.Warnings, err = q.Client.QueryRange(
+	if result.Value, result.Warnings, err = q.API.QueryRange(
 		ctx,
 		params.Arguments.Query,
 		v1.Range{

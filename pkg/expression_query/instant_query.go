@@ -51,7 +51,7 @@ func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, _ *mcp.Serv
 	}
 
 	result := InstantQueryResult{}
-	if result.Value, result.Warnings, err = q.Client.Query(
+	if result.Value, result.Warnings, err = q.API.Query(
 		ctx,
 		params.Arguments.Query,
 		ts,

@@ -3,6 +3,7 @@ package bind
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
+	"github.com/yshngg/pmcp/pkg/manage"
 	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
 )
 
@@ -12,7 +13,7 @@ func (b *binder) addTools() {
 	// Expression queries
 	// Query language expressions may be evaluated at a single instant or over a range of time.
 	{
-		expressionQuerier := expressionquery.NewExpressionQuerier(b.promCli)
+		expressionQuerier := expressionquery.NewExpressionQuerier(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Prometheus Instant Query",
 			Description: "Run a Prometheus expression and get the current value for a metric or calculation at a specific time. Use this to check the latest status or value of any metric.",
@@ -27,7 +28,7 @@ func (b *binder) addTools() {
 	// Querying metadata
 	// Prometheus offers a set of API endpoints to query metadata about series and their labels.
 	{
-		metadataQuerier := metadataquery.NewMetadataQuerier(b.promCli)
+		metadataQuerier := metadataquery.NewMetadataQuerier(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Find Series by Labels",
 			Description: "List all time series that match specific label filters. Use this to discover which series exist for given label criteria.",
@@ -42,5 +43,30 @@ func (b *binder) addTools() {
 			Name:        "List Label Values",
 			Description: "Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.",
 		}, metadataQuerier.LabelValuesHandler)
+	}
+
+	// Management API
+	// Prometheus provides a set of management APIs to facilitate automation and integration.
+	{
+		manager := manage.NewManager(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Health Check",
+			Description: "Check whether Prometheus is healthy.",
+		}, manager.HealthCheckHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Readiness Check",
+			Description: "Check whether Prometheus is ready to serve traffic.",
+		}, manager.ReadinessCheckHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Reload",
+			Description: "Trigger a reload of the Prometheus configuration and rule files.",
+		}, manager.ReloadHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Quit",
+			Description: "Trigger a graceful shutdown of Prometheus.",
+		}, manager.QuitHandler)
 	}
 }
