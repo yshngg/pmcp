@@ -2,6 +2,7 @@ package bind
 
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	alertquery "github.com/yshngg/pmcp/pkg/alert_query"
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
 	"github.com/yshngg/pmcp/pkg/manage"
 	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
@@ -75,6 +76,16 @@ func (b *binder) addTools() {
 			Name:        "Rule Query",
 			Description: "Get a list of alerting and recording rules that are currently loaded. In addition it returns the currently active alerts fired by the Prometheus instance of each alerting rule.",
 		}, ruleQuerier.RuleQueryHandler)
+	}
+
+	// Alerts
+	// A list of all active alerts.
+	{
+		alertQuerier := alertquery.NewAlertQuerier(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Alert Query",
+			Description: "Get a list of all active alerts.",
+		}, alertQuerier.AlertQueryHandler)
 	}
 
 	// Management API
