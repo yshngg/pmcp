@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	bindingblocks "github.com/yshngg/pmcp/pkg/binding_blocks"
+	"github.com/yshngg/pmcp/pkg/bindingblocks"
 	"github.com/yshngg/pmcp/pkg/prometheus/api"
 	"github.com/yshngg/pmcp/pkg/version"
 )
