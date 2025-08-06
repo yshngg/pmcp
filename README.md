@@ -90,6 +90,7 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 * **Target Discovery**: Overview of currently discovered Prometheus targets and their statuses.
 * **Alert Query**: Get a list of all active alerts.
 * **Rule Query**: Get a list of alerting and recording rules that are currently loaded.
+* **Alertmanager Discovery**: Get an overview of the current state of the Prometheus alertmanager discovery.
 * **Health Check**: Verify if Prometheus is responding.
 * **Readiness Check**: Determine if Prometheus is ready to serve queries.
 * **Reload**: Trigger configuration and rule file reload.
