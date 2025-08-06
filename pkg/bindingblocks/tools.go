@@ -26,7 +26,7 @@ func (b *binder) addTools() {
 
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Range Query",
-			Description: "Evaluates an expression query over a range of time.",
+			Description: "Evaluate an expression query over a range of time.",
 		}, expressionQuerier.RangeQueryHandler)
 	}
 
@@ -146,7 +146,7 @@ func (b *binder) addTools() {
 
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Readiness Check",
-			Description: "Prometheus is ready to serve traffic (i.e. respond to queries).",
+			Description: "Check if Prometheus is ready to serve traffic (i.e. respond to queries).",
 		}, manager.ReadinessCheckHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{

@@ -81,7 +81,7 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 ### Tools
 
 * **Instant Query**: Evaluate an instant query at a single point in time.
-* **Range Query**: Evaluates an expression query over a range of time.
+* **Range Query**: Evaluate an expression query over a range of time.
 * **Find Series by Labels**: Return the list of time series that match a certain label set.
 * **List Label Names**: Return a list of label names.
 * **List Label Values**: Return a list of label values for a provided label name.
@@ -98,7 +98,7 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 * **TSDB Stats**: Return various cardinality statistics about the Prometheus TSDB.
 * **WAL Replay Stats**: Return information about the WAL replay.
 * **Health Check**: Check Prometheus health.
-* **Readiness Check**: Prometheus is ready to serve traffic (i.e. respond to queries).
+* **Readiness Check**: Check if Prometheus is ready to serve traffic (i.e. respond to queries).
 * **Reload**: Trigger a reload of the Prometheus configuration and rule files.
 * **Quit**: Trigger a graceful shutdown of Prometheus.
 
