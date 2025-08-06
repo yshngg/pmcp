@@ -20,13 +20,13 @@ func (b *binder) addTools() {
 	{
 		expressionQuerier := expressionquery.NewExpressionQuerier(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
-			Name:        "Prometheus Instant Query",
-			Description: "Run a Prometheus expression and get the current value for a metric or calculation at a specific time. Use this to check the latest status or value of any metric.",
+			Name:        "Instant Query",
+			Description: "Evaluate an instant query at a single point in time.",
 		}, expressionQuerier.InstantQueryHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{
-			Name:        "Prometheus Range Query",
-			Description: "Run a Prometheus expression over a time range to get historical values for a metric or calculation. Use this to analyze trends or patterns over time.",
+			Name:        "Range Query",
+			Description: "Evaluates an expression query over a range of time.",
 		}, expressionQuerier.RangeQueryHandler)
 	}
 
@@ -36,27 +36,27 @@ func (b *binder) addTools() {
 		metadataQuerier := metadataquery.NewMetadataQuerier(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Find Series by Labels",
-			Description: "List all time series that match specific label filters. Use this to discover which series exist for given label criteria.",
+			Description: "Return the list of time series that match a certain label set.",
 		}, metadataQuerier.SeriesHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "List Label Names",
-			Description: "Get all label names used in the Prometheus database. Use this to explore available labels for filtering or grouping.",
+			Description: "Return a list of label names.",
 		}, metadataQuerier.LabelNamesHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "List Label Values",
-			Description: "Get all possible values for a specific label name. Use this to see which values a label can take for filtering or selection.",
+			Description: "Return a list of label values for a provided label name.",
 		}, metadataQuerier.LabelValuesHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Target Metadata Query",
-			Description: "Get metadata about metrics currently scraped from targets.",
+			Description: "Return metadata about metrics currently scraped from targets.",
 		}, metadataQuerier.TargetMetadataQueryHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Metric Metadata Query",
-			Description: "Get metadata about metrics currently scraped from targets. However, it does not provide any target information.",
+			Description: "Return metadata about metrics currently scraped from targets. However, it does not provide any target information.",
 		}, metadataQuerier.MetricsMetadataQueryHandler)
 	}
 
@@ -66,7 +66,7 @@ func (b *binder) addTools() {
 		targetDiscoverer := targetdiscover.NewTargetDiscoverer(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Target Discovery",
-			Description: "Get an overview of the current state of the Prometheus target discovery.",
+			Description: "Return an overview of the current state of the Prometheus target discovery.",
 		}, targetDiscoverer.TargetDiscoverHandler)
 	}
 
@@ -76,7 +76,7 @@ func (b *binder) addTools() {
 		ruleQuerier := rulequery.NewRuleQuerier(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Rule Query",
-			Description: "Get a list of alerting and recording rules that are currently loaded. In addition it returns the currently active alerts fired by the Prometheus instance of each alerting rule.",
+			Description: "Return a list of alerting and recording rules that are currently loaded. In addition it returns the currently active alerts fired by the Prometheus instance of each alerting rule.",
 		}, ruleQuerier.RuleQueryHandler)
 	}
 
@@ -86,7 +86,7 @@ func (b *binder) addTools() {
 		alertQuerier := alertquery.NewAlertQuerier(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Alert Query",
-			Description: "Get a list of all active alerts.",
+			Description: "Return a list of all active alerts.",
 		}, alertQuerier.AlertQueryHandler)
 	}
 
@@ -96,7 +96,7 @@ func (b *binder) addTools() {
 		alertmanagerDiscoverer := alertmanagerdiscover.NewAlertmanagerDiscoverer(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Alertmanager Discovery",
-			Description: "Get an overview of the current state of the Prometheus alertmanager discovery.",
+			Description: "Return an overview of the current state of the Prometheus alertmanager discovery.",
 		}, alertmanagerDiscoverer.AlertmanagerDiscoverHandler)
 	}
 
@@ -141,12 +141,12 @@ func (b *binder) addTools() {
 		manager := manage.NewManager(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Health Check",
-			Description: "Check whether Prometheus is healthy.",
+			Description: "Check Prometheus health.",
 		}, manager.HealthCheckHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Readiness Check",
-			Description: "Check whether Prometheus is ready to serve traffic.",
+			Description: "Prometheus is ready to serve traffic (i.e. respond to queries).",
 		}, manager.ReadinessCheckHandler)
 
 		mcp.AddTool(b.server, &mcp.Tool{
