@@ -88,6 +88,7 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 * **Target Metadata Query**: Get metadata about metrics currently scraped from targets.
 * **Metric Metadata Query**: Get metadata about metrics currently scraped from targets. However, it does not provide any target information.
 * **Target Discovery**: Overview of currently discovered Prometheus targets and their statuses.
+* **Rule Query**: Get a list of alerting and recording rules that are currently loaded.
 * **Health Check**: Verify if Prometheus is responding.
 * **Readiness Check**: Determine if Prometheus is ready to serve queries.
 * **Reload**: Trigger configuration and rule file reload.

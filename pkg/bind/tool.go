@@ -5,6 +5,7 @@ import (
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
 	"github.com/yshngg/pmcp/pkg/manage"
 	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
+	rulequery "github.com/yshngg/pmcp/pkg/rule_query"
 	targetdiscover "github.com/yshngg/pmcp/pkg/target_discover"
 )
 
@@ -64,6 +65,16 @@ func (b *binder) addTools() {
 			Name:        "Target Discovery",
 			Description: "Get an overview of the current state of the Prometheus target discovery.",
 		}, targetDiscoverer.TargetDiscoverHandler)
+	}
+
+	// Rules
+	// A list of alerting and recording rules that are currently loaded.
+	{
+		ruleQuerier := rulequery.NewRuleQuerier(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Rule Query",
+			Description: "Get a list of alerting and recording rules that are currently loaded. In addition it returns the currently active alerts fired by the Prometheus instance of each alerting rule.",
+		}, ruleQuerier.RuleQueryHandler)
 	}
 
 	// Management API
