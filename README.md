@@ -80,27 +80,27 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 
 ### Tools
 
-* **Instant Query**: Retrieve the current value of a metric or calculation at a given timestamp.
-* **Range Query**: Fetch metric values over a specified time interval for trend analysis.
-* **Find Series by Labels**: List all time series matching specific label filters.
-* **List Label Names**: Retrieve all label names in the Prometheus database.
-* **List Label Values**: Get all possible values for a particular label name.
-* **Target Metadata Query**: Get metadata about metrics currently scraped from targets.
-* **Metric Metadata Query**: Get metadata about metrics currently scraped from targets. However, it does not provide any target information.
-* **Target Discovery**: Overview of currently discovered Prometheus targets and their statuses.
-* **Alert Query**: Get a list of all active alerts.
-* **Rule Query**: Get a list of alerting and recording rules that are currently loaded.
-* **Alertmanager Discovery**: Get an overview of the current state of the Prometheus alertmanager discovery.
+* **Instant Query**: Evaluate an instant query at a single point in time.
+* **Range Query**: Evaluate an expression query over a range of time.
+* **Find Series by Labels**: Return the list of time series that match a certain label set.
+* **List Label Names**: Return a list of label names.
+* **List Label Values**: Return a list of label values for a provided label name.
+* **Target Metadata Query**: Return metadata about metrics currently scraped from targets.
+* **Metric Metadata Query**: Return metadata about metrics currently scraped from targets. However, it does not provide any target information.
+* **Target Discovery**: Return an overview of the current state of the Prometheus target discovery.
+* **Alert Query**: Return a list of all active alerts.
+* **Rule Query**: Return a list of alerting and recording rules that are currently loaded. In addition it returns the currently active alerts fired by the Prometheus instance of each alerting rule.
+* **Alertmanager Discovery**: Return an overview of the current state of the Prometheus alertmanager discovery.
 * **Config**: Return currently loaded configuration file.
 * **Flags**: Return flag values that Prometheus was configured with.
 * **Runtime Information**: Return various runtime information properties about the Prometheus server.
 * **Build Information**: Return various build information properties about the Prometheus server.
 * **TSDB Stats**: Return various cardinality statistics about the Prometheus TSDB.
 * **WAL Replay Stats**: Return information about the WAL replay.
-* **Health Check**: Verify if Prometheus is responding.
-* **Readiness Check**: Determine if Prometheus is ready to serve queries.
-* **Reload**: Trigger configuration and rule file reload.
-* **Quit**: Gracefully shut down Prometheus.
+* **Health Check**: Check Prometheus health.
+* **Readiness Check**: Check if Prometheus is ready to serve traffic (i.e. respond to queries).
+* **Reload**: Trigger a reload of the Prometheus configuration and rule files.
+* **Quit**: Trigger a graceful shutdown of Prometheus.
 
 ### Prompts
 
