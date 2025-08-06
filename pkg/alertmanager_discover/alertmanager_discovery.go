@@ -13,12 +13,8 @@ type AlertmanagerDiscoverParams struct{}
 type AlertmanagerDiscoverResult = v1.AlertManagersResult
 
 func (d *alertmanagerDiscoverer) AlertmanagerDiscoverHandler(ctx context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[AlertmanagerDiscoverParams]) (*mcp.CallToolResultFor[AlertmanagerDiscoverResult], error) {
-	var (
-		result AlertmanagerDiscoverResult
-		err    error
-	)
-
-	if result, err = d.API.AlertManagers(ctx); err != nil {
+	result, err := d.API.AlertManagers(ctx)
+	if err != nil {
 		return nil, err
 	}
 
