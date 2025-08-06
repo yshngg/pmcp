@@ -2,6 +2,7 @@ package bind
 
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	alertquery "github.com/yshngg/pmcp/pkg/alert_query"
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
 	"github.com/yshngg/pmcp/pkg/manage"
 	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
@@ -80,11 +81,11 @@ func (b *binder) addTools() {
 	// Alerts
 	// A list of all active alerts.
 	{
-		targetDiscoverer := targetdiscover.NewTargetDiscoverer(b.api)
+		alertQuerier := alertquery.NewAlertQuerier(b.api)
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "Alert Query",
 			Description: "Get a list of all active alerts.",
-		}, targetDiscoverer.TargetDiscoverHandler)
+		}, alertQuerier.AlertQueryHandler)
 	}
 
 	// Management API

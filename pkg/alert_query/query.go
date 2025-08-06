@@ -11,7 +11,7 @@ type AlertQuerier interface {
 	AlertQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[AlertQueryParams]) (*mcp.CallToolResultFor[AlertQueryResult], error)
 }
 
-func NewAlertQueryer(api api.PrometheusAPI) AlertQuerier {
+func NewAlertQuerier(api api.PrometheusAPI) AlertQuerier {
 	return &alertQuerier{API: api}
 }
 
