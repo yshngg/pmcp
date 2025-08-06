@@ -85,6 +85,8 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 * **Find Series by Labels**: List all time series matching specific label filters.
 * **List Label Names**: Retrieve all label names in the Prometheus database.
 * **List Label Values**: Get all possible values for a particular label name.
+* **Target Metadata Query**: Get metadata about metrics currently scraped from targets.
+* **Metric Metadata Query**: Get metadata about metrics currently scraped from targets. However, it does not provide any target information.
 * **Target Discovery**: Overview of currently discovered Prometheus targets and their statuses.
 * **Health Check**: Verify if Prometheus is responding.
 * **Readiness Check**: Determine if Prometheus is ready to serve queries.
