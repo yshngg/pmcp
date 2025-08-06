@@ -97,6 +97,9 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 * **Build Information**: Return various build information properties about the Prometheus server.
 * **TSDB Stats**: Return various cardinality statistics about the Prometheus TSDB.
 * **WAL Replay Stats**: Return information about the WAL replay.
+* **TSDB Snapshot**: Create a snapshot of all current data into snapshots/<datetime>-<rand>.
+* **Delete Series**: Delete data for a selection of series in a time range.
+* **Clean Tombstones**: Remove the deleted data from disk and cleans up the existing tombstones.
 * **Health Check**: Check Prometheus health.
 * **Readiness Check**: Check if Prometheus is ready to serve traffic (i.e. respond to queries).
 * **Reload**: Trigger a reload of the Prometheus configuration and rule files.

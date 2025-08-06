@@ -10,6 +10,7 @@ import (
 	"github.com/yshngg/pmcp/pkg/rulequery"
 	"github.com/yshngg/pmcp/pkg/statusexpose"
 	"github.com/yshngg/pmcp/pkg/targetdiscover"
+	"github.com/yshngg/pmcp/pkg/tsdbadmin"
 )
 
 // addTools registers Prometheus query tools with the MCP server.
@@ -133,6 +134,26 @@ func (b *binder) addTools() {
 			Name:        "WAL Replay Stats",
 			Description: "Return information about the WAL replay.",
 		}, statusExposer.WALReplayStatsExposeHandler)
+	}
+
+	// TSDB Admin APIs
+	// Expose database functionalities for the advanced user.
+	{
+		tsdbAdmin := tsdbadmin.NewTSDBAdmin(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "TSDB Snapshot",
+			Description: "Create a snapshot of all current data into snapshots/<datetime>-<rand> under the TSDB's data directory and returns the directory as response. It will optionally skip snapshotting data that is only present in the head block, and which has not yet been compacted to disk.",
+		}, tsdbAdmin.SnapshotHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Delete Series",
+			Description: "Delete data for a selection of series in a time range. The actual data still exists on disk and is cleaned up in future compactions or can be explicitly cleaned up by hitting the Clean Tombstones endpoint. Not mentioning both start and end times would clear all the data for the matched series in the database.",
+		}, tsdbAdmin.DeleteSeriesHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Clean Tombstones",
+			Description: "Remove the deleted data from disk and cleans up the existing tombstones. This can be used after deleting series to free up space.",
+		}, tsdbAdmin.CleanTombstonesHandler)
 	}
 
 	// Management API
