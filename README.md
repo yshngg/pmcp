@@ -91,6 +91,12 @@ pmcp --prom-addr="http://localhost:9090" --transport=sse --mcp-addr="localhost:8
 * **Alert Query**: Get a list of all active alerts.
 * **Rule Query**: Get a list of alerting and recording rules that are currently loaded.
 * **Alertmanager Discovery**: Get an overview of the current state of the Prometheus alertmanager discovery.
+* **Config**: Return currently loaded configuration file.
+* **Flags**: Return flag values that Prometheus was configured with.
+* **Runtime Information**: Return various runtime information properties about the Prometheus server.
+* **Build Information**: Return various build information properties about the Prometheus server.
+* **TSDB Stats**: Return various cardinality statistics about the Prometheus TSDB.
+* **WAL Replay Stats**: Return information about the WAL replay.
 * **Health Check**: Verify if Prometheus is responding.
 * **Readiness Check**: Determine if Prometheus is ready to serve queries.
 * **Reload**: Trigger configuration and rule file reload.

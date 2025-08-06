@@ -8,6 +8,7 @@ import (
 	"github.com/yshngg/pmcp/pkg/manage"
 	"github.com/yshngg/pmcp/pkg/metadataquery"
 	"github.com/yshngg/pmcp/pkg/rulequery"
+	"github.com/yshngg/pmcp/pkg/statusexpose"
 	"github.com/yshngg/pmcp/pkg/targetdiscover"
 )
 
@@ -97,6 +98,41 @@ func (b *binder) addTools() {
 			Name:        "Alertmanager Discovery",
 			Description: "Get an overview of the current state of the Prometheus alertmanager discovery.",
 		}, alertmanagerDiscoverer.AlertmanagerDiscoverHandler)
+	}
+
+	// Status
+	// Expose current Prometheus configuration.
+	{
+		statusExposer := statusexpose.NewStatusExposer(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Config",
+			Description: "Return currently loaded configuration file.",
+		}, statusExposer.ConfigExposeHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Flags",
+			Description: "Return flag values that Prometheus was configured with.",
+		}, statusExposer.FlagsExposeHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Runtime Information",
+			Description: "Return various runtime information properties about the Prometheus server.",
+		}, statusExposer.RuntimeInformationExposeHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Build Information",
+			Description: "Return various build information properties about the Prometheus server.",
+		}, statusExposer.BuildInformationExposeHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "TSDB Stats",
+			Description: "Return various cardinality statistics about the Prometheus TSDB.",
+		}, statusExposer.TSDBStatsExposeHandler)
+
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "WAL Replay Stats",
+			Description: "Return information about the WAL replay.",
+		}, statusExposer.WALReplayStatsExposeHandler)
 	}
 
 	// Management API
