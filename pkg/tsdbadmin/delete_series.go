@@ -29,7 +29,7 @@ type DeleteSeriesResult struct {
 	Message string `json:"message,omitempty" jsonschema:"Explanation message when the operation fails."`
 }
 
-func (a *tsdbAdmin) DeleteSeriesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[DeleteSeriesParams]) (*mcp.CallToolResultFor[DeleteSeriesResult], error) {
+func (a *tsdbAdmin) DeleteSeriesHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[DeleteSeriesParams]) (*mcp.CallToolResultFor[DeleteSeriesResult], error) {
 	var (
 		start, end time.Time
 		err        error

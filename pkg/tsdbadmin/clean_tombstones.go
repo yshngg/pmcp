@@ -14,7 +14,7 @@ type CleanTombstonesResult struct {
 	Message string `json:"message,omitempty" jsonschema:"Explanation message when the operation fails."`
 }
 
-func (a *tsdbAdmin) CleanTombstonesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[CleanTombstonesParams]) (*mcp.CallToolResultFor[CleanTombstonesResult], error) {
+func (a *tsdbAdmin) CleanTombstonesHandler(ctx context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[CleanTombstonesParams]) (*mcp.CallToolResultFor[CleanTombstonesResult], error) {
 	result := CleanTombstonesResult{Success: true}
 	if err := a.API.CleanTombstones(ctx); err != nil {
 		result.Success = false

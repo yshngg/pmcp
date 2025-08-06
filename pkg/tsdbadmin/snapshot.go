@@ -16,7 +16,7 @@ type SnapshotParams struct {
 }
 type SnapshotResult = v1.SnapshotResult
 
-func (a *tsdbAdmin) SnapshotHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[SnapshotParams]) (*mcp.CallToolResultFor[SnapshotResult], error) {
+func (a *tsdbAdmin) SnapshotHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[SnapshotParams]) (*mcp.CallToolResultFor[SnapshotResult], error) {
 	result, err := a.API.Snapshot(ctx, params.Arguments.SkipHead)
 	if err != nil {
 		return nil, err
