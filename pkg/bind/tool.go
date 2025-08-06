@@ -77,6 +77,16 @@ func (b *binder) addTools() {
 		}, ruleQuerier.RuleQueryHandler)
 	}
 
+	// Alerts
+	// A list of all active alerts.
+	{
+		targetDiscoverer := targetdiscover.NewTargetDiscoverer(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Alert Query",
+			Description: "Get a list of all active alerts.",
+		}, targetDiscoverer.TargetDiscoverHandler)
+	}
+
 	// Management API
 	// Prometheus provides a set of management APIs to facilitate automation and integration.
 	{
