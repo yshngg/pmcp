@@ -3,6 +3,7 @@ package tsdbadmin
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"time"
 
@@ -39,6 +40,10 @@ func (a *tsdbAdmin) DeleteSeriesHandler(ctx context.Context, _ *mcp.ServerSessio
 	}
 	if end, err = utils.ParseTime(params.Arguments.End); err != nil {
 		slog.Warn("parse end time", "err", err)
+	}
+
+	if len(params.Arguments.Match) == 0 {
+		return nil, fmt.Errorf("at least one match[] selector is required")
 	}
 
 	result := DeleteSeriesResult{Success: true}

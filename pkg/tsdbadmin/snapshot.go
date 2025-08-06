@@ -12,7 +12,7 @@ import (
 // skip_head=<bool>: Skip data present in the head block. Optional.
 // curl -XPOST http://localhost:9090/api/v1/admin/tsdb/snapshot
 type SnapshotParams struct {
-	SkipHead bool `json:"skip_head,omitempty" jsonschema:""`
+	SkipHead bool `json:"skip_head,omitempty" jsonschema:"<bool>: Skip data present in the head block. Optional."`
 }
 type SnapshotResult = v1.SnapshotResult
 
