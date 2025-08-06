@@ -8,7 +8,7 @@ import (
 )
 
 type RuleQuerier interface {
-	RuleQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[struct{}]) (*mcp.CallToolResultFor[RuleQueryResult], error)
+	RuleQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[RuleQueryArguments]) (*mcp.CallToolResultFor[RuleQueryResult], error)
 }
 
 func NewRuleQuerier(api api.PrometheusAPI) RuleQuerier {
