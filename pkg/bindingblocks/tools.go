@@ -132,7 +132,7 @@ func (b *binder) addTools() {
 		mcp.AddTool(b.server, &mcp.Tool{
 			Name:        "WAL Replay Stats",
 			Description: "Return information about the WAL replay.",
-		}, statusExposer.TSDBStatsExposeHandler)
+		}, statusExposer.WALReplayStatsExposeHandler)
 	}
 
 	// Management API
