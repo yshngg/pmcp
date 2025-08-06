@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/pkg/bind"
+	bindingblocks "github.com/yshngg/pmcp/pkg/binding_blocks"
 	"github.com/yshngg/pmcp/pkg/prometheus/api"
 	"github.com/yshngg/pmcp/pkg/version"
 )
@@ -56,7 +56,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	binder := bind.NewBinder(server, promCli)
+	binder := bindingblocks.NewBinder(server, promCli)
 	binder.Bind()
 
 	if *transportType == "http" {

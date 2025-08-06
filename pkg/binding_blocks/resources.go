@@ -1,4 +1,4 @@
-package bind
+package bindingblocks
 
 func (b *binder) addResources() {
 }

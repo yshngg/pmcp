@@ -1,4 +1,4 @@
-package bind
+package bindingblocks
 
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
