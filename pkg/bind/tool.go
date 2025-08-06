@@ -3,6 +3,7 @@ package bind
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	alertquery "github.com/yshngg/pmcp/pkg/alert_query"
+	alertmanagerdiscover "github.com/yshngg/pmcp/pkg/alertmanager_discover"
 	expressionquery "github.com/yshngg/pmcp/pkg/expression_query"
 	"github.com/yshngg/pmcp/pkg/manage"
 	metadataquery "github.com/yshngg/pmcp/pkg/metadata_query"
@@ -86,6 +87,16 @@ func (b *binder) addTools() {
 			Name:        "Alert Query",
 			Description: "Get a list of all active alerts.",
 		}, alertQuerier.AlertQueryHandler)
+	}
+
+	// Alertmanagers
+	// An overview of the current state of the Prometheus alertmanager discovery.
+	{
+		alertmanagerDiscoverer := alertmanagerdiscover.NewAlertmanagerDiscoverer(b.api)
+		mcp.AddTool(b.server, &mcp.Tool{
+			Name:        "Alertmanager Discovery",
+			Description: "Get an overview of the current state of the Prometheus alertmanager discovery.",
+		}, alertmanagerDiscoverer.AlertmanagerDiscoverHandler)
 	}
 
 	// Management API
