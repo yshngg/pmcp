@@ -49,7 +49,7 @@ jobs:
           config: ./.testcoverage.yaml
           profile: cover.out
           breakdown-file-name: ${{ github.ref_name == 'main' && 'main.breakdown' || '' }}
-          diff-base-breakdown-file-name: ${{ steps.download-main-breakdown.outputs.found_artifact == 'true' && 'main.breakdown' || '' }}
+          diff-base-breakdown-file-name: main.breakdown
 
       - name: Upload artifact (main.breakdown)
         if: github.event_name == 'push' && github.ref_name == 'main'
