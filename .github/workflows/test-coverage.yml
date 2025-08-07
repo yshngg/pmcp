@@ -46,10 +46,13 @@ jobs:
         uses: vladopajic/go-test-coverage@v2
         continue-on-error: true # Should fail after coverage comment is posted
         with:
-          config: ./.testcoverage.yaml
           profile: cover.out
+          # threshold-file: 70
+          # threshold-package: 80
+          # threshold-total: 95
           breakdown-file-name: ${{ github.ref_name == 'main' && 'main.breakdown' || '' }}
           diff-base-breakdown-file-name: main.breakdown
+          diff-threshold: null
 
       - name: Upload artifact (main.breakdown)
         if: github.event_name == 'push' && github.ref_name == 'main'
