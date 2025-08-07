@@ -2,6 +2,9 @@ name: "Test"
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - "main"
   pull_request:
     branches:
       - "main"
@@ -23,7 +26,52 @@ jobs:
       - name: Generate test coverage
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
+      - name: Download artifact (main.breakdown)
+        id: download-main-breakdown
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          branch: main
+          workflow_conclusion: success
+          name: main.breakdown
+          if_no_artifact_found: warn
+
       - name: Check test coverage
+        id: coverage
         uses: vladopajic/go-test-coverage@v2
+        continue-on-error: true # Should fail after coverage comment is posted
         with:
           config: ./.testcoverage.yaml
+          profile: ubuntu-latest-profile,macos-latest-profile,windows-latest-profile
+
+          # Save current coverage breakdown if current branch is main. It will be
+          # uploaded as artifact in step below.
+          breakdown-file-name: ${{ github.ref_name == 'main' && 'main.breakdown' || '' }}
+
+          # If this is not main brach we want to show report including
+          # file coverage difference from main branch.
+          diff-base-breakdown-file-name: ${{ steps.download-main-breakdown.outputs.found_artifact == 'true' && 'main.breakdown' || '' }
+
+      - name: Upload artifact (main.breakdown)
+        uses: actions/upload-artifact@v4
+        if: github.ref_name == 'main'
+        with:
+          name: main.breakdown
+          path: main.breakdown # as specified via `breakdown-file-name`
+          if-no-files-found: error
+
+      - name: Post coverage report
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          comment-tag: coverage-report
+          pr-number: ${{ github.event.number }}
+          message: |
+            Go Test Coverage Report:
+            ```
+            ${{ fromJSON(steps.coverage.outputs.report) }}
+            ```
+
+      - name: "Finally check coverage"
+        if: steps.coverage.outcome == 'failure'
+        shell: bash
+        run: echo "coverage check failed" && exit 1
