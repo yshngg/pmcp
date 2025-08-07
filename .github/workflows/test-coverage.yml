@@ -12,6 +12,9 @@ on:
 env:
   GO_VERSION: stable
 
+permissions:
+  pull-requests: write
+
 jobs:
   go-test-coverage:
     name: "Go Test Coverage"
@@ -24,28 +27,18 @@ jobs:
       - run: go version
 
       - name: Generate test coverage
-        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+        run: |
+          go test -race -count=1 -coverprofile=cover.out -covermode=atomic -coverpkg=./... ./...
 
-      - name: download ubuntu-latest-profile
-        uses: actions/download-artifact@v5
-        with:
-          name: ubuntu-latest-profile
-      - name: download macos-latest-profile
-        uses: actions/download-artifact@v5
-        with:
-          name: macos-latest-profile
-      - name: download windows-latest-profile
-        uses: actions/download-artifact@v5
-        with:
-          name: windows-latest-profile
-
-      - name: download artifact (main.breakdown)
+      - name: Download artifact (main.breakdown)
+        if: github.event_name == 'pull_request'
         id: download-main-breakdown
         uses: actions/download-artifact@v5
         with:
           name: main.breakdown
 
       - name: Display structure of downloaded files
+        if: github.event_name == 'pull_request'
         run: ls -R
 
       - name: Check test coverage
@@ -54,19 +47,13 @@ jobs:
         continue-on-error: true # Should fail after coverage comment is posted
         with:
           config: ./.testcoverage.yaml
-          profile: ubuntu-latest-profile,macos-latest-profile,windows-latest-profile
-
-          # Save current coverage breakdown if current branch is main. It will be
-          # uploaded as artifact in step below.
+          profile: cover.out
           breakdown-file-name: ${{ github.ref_name == 'main' && 'main.breakdown' || '' }}
-
-          # If this is not main brach we want to show report including
-          # file coverage difference from main branch.
           diff-base-breakdown-file-name: ${{ steps.download-main-breakdown.outputs.found_artifact == 'true' && 'main.breakdown' || '' }}
 
       - name: Upload artifact (main.breakdown)
+        if: github.event_name == 'push' && github.ref_name == 'main'
         uses: actions/upload-artifact@v4
-        if: github.ref_name == 'main'
         with:
           name: main.breakdown
           path: main.breakdown # as specified via `breakdown-file-name`
