@@ -78,8 +78,7 @@ jobs:
           message: |
             Go Test Coverage Report:
             ```
-            ${{ fromJSON(steps.coverage.outputs.report) }}
-            ```
+            ${{ fromJSON(steps.coverage.outputs.report) }}```
 
       - name: "Finally check coverage"
         if: steps.coverage.outcome == 'failure'
