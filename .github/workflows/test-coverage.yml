@@ -60,11 +60,12 @@ jobs:
           if-no-files-found: error
 
       - name: Post coverage report
+        if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           comment-tag: coverage-report
-          pr-number: ${{ github.event.number }}
+          pr_number: ${{ github.event.number }}
           message: |
             Go Test Coverage Report:
             ```
