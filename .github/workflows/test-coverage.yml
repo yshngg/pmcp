@@ -22,4 +22,4 @@ jobs:
       - name: Check test coverage
         uses: vladopajic/go-test-coverage@v2
         with:
-          config: ./.testcoverage.yml
+          config: ./.testcoverage.yaml
