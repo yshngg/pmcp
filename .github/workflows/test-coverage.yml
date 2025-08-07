@@ -26,14 +26,27 @@ jobs:
       - name: Generate test coverage
         run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 
-      - name: Download artifact (main.breakdown)
-        id: download-main-breakdown
-        uses: dawidd6/action-download-artifact@v11
+      - name: download ubuntu-latest-profile
+        uses: actions/download-artifact@v5
         with:
-          branch: main
-          workflow_conclusion: success
+          name: ubuntu-latest-profile
+      - name: download macos-latest-profile
+        uses: actions/download-artifact@v5
+        with:
+          name: macos-latest-profile
+      - name: download windows-latest-profile
+        uses: actions/download-artifact@v5
+        with:
+          name: windows-latest-profile
+
+      - name: download artifact (main.breakdown)
+        id: download-main-breakdown
+        uses: actions/download-artifact@v5
+        with:
           name: main.breakdown
-          if_no_artifact_found: warn
+
+      - name: Display structure of downloaded files
+        run: ls -R
 
       - name: Check test coverage
         id: coverage
@@ -65,7 +78,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           comment-tag: coverage-report
-          pr_number: ${{ github.event.number }}
+          pr-number: ${{ github.event.number }}
           message: |
             Go Test Coverage Report:
             ```
