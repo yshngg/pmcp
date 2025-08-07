@@ -1,6 +1,8 @@
 module github.com/yshngg/pmcp
 
-go 1.23.5
+go 1.23.0
+
+toolchain go1.24.6
 
 require (
 	github.com/modelcontextprotocol/go-sdk v0.2.0

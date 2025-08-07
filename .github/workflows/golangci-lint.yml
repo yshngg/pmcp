@@ -1,4 +1,4 @@
-name: golangci-lint
+name: Lint
 
 on:
   pull_request:
@@ -12,6 +12,7 @@ env:
 
 jobs:
   detect-modules:
+    name: Detect Modules
     runs-on: ubuntu-latest
     outputs:
       modules: ${{ steps.set-modules.outputs.modules }}
@@ -24,6 +25,7 @@ jobs:
         run: echo "modules=$(go list -m -json | jq -s '.' | jq -c '[.[].Dir]')" >> $GITHUB_OUTPUT
 
   golangci-lint:
+    name: Golang Lint
     needs: detect-modules
     runs-on: ubuntu-latest
     strategy:
