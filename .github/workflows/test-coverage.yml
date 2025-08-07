@@ -2,12 +2,18 @@ name: "Test"
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - "main"
   pull_request:
     branches:
       - "main"
 
 env:
   GO_VERSION: stable
+
+permissions:
+  pull-requests: write
 
 jobs:
   go-test-coverage:
@@ -21,9 +27,60 @@ jobs:
       - run: go version
 
       - name: Generate test coverage
-        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+        run: |
+          go test -race -count=1 -coverprofile=cover.out -covermode=atomic -coverpkg=./... ./...
+
+      - name: Download artifact (main.breakdown)
+        if: github.event_name == 'pull_request'
+        id: download-main-breakdown
+        uses: actions/download-artifact@v5
+        continue-on-error: true
+        with:
+          name: main.breakdown
+
+      - name: Touch main.breakdown
+        if: github.event_name == 'pull_request' && steps.download-main-breakdown.outcome == 'failure'
+        run: |
+          touch main.breakdown
+
+      - name: Display structure of downloaded files
+        if: github.event_name == 'pull_request'
+        run: ls -R
 
       - name: Check test coverage
+        id: coverage
         uses: vladopajic/go-test-coverage@v2
+        continue-on-error: true # Should fail after coverage comment is posted
         with:
-          config: ./.testcoverage.yaml
+          profile: cover.out
+          # threshold-file: 70
+          # threshold-package: 80
+          # threshold-total: 95
+          breakdown-file-name: ${{ github.ref_name == 'main' && 'main.breakdown' || '' }}
+          diff-base-breakdown-file-name: main.breakdown
+          diff-threshold: null
+
+      - name: Upload artifact (main.breakdown)
+        if: github.event_name == 'push' && github.ref_name == 'main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: main.breakdown
+          path: main.breakdown # as specified via `breakdown-file-name`
+          if-no-files-found: error
+
+      - name: Post coverage report
+        if: github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          comment-tag: coverage-report
+          pr-number: ${{ github.event.number }}
+          message: |
+            Go Test Coverage Report:
+            ```
+            ${{ fromJSON(steps.coverage.outputs.report) }}```
+
+      - name: "Finally check coverage"
+        if: steps.coverage.outcome == 'failure'
+        shell: bash
+        run: echo "coverage check failed" && exit 1
