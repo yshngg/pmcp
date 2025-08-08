@@ -46,6 +46,7 @@ jobs:
           if [ -n "$id" ]; then
               echo "RUN_ID=$id" >> "$GITHUB_OUTPUT"
           fi
+          echo "::notice::RUN_ID=$id"
 
       - name: Download artifact (main.breakdown)
         if: github.event_name == 'pull_request'
