@@ -9,8 +9,7 @@ import (
 )
 
 func TestParseTime(t *testing.T) {
-	now := time.Now()
-	now = time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second(), 0, time.UTC)
+	now := time.Now().Truncate(time.Second)
 
 	testCases := []struct {
 		name     string
