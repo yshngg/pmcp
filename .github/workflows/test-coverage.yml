@@ -12,9 +12,6 @@ on:
 env:
   GO_VERSION: stable
 
-permissions:
-  pull-requests: write
-
 jobs:
   go-test-coverage:
     name: "Go Test Coverage"
