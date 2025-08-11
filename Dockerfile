@@ -7,8 +7,6 @@ ARG BUILD_DATE=unknown
 # Build stage
 FROM --platform=$BUILDPLATFORM golang:1.24 AS builder
 
-ARG TARGETOS
-ARG TARGETARCH
 ARG VERSION_NUMBER
 ARG GIT_COMMIT
 ARG BUILD_DATE
@@ -19,6 +17,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+
+ARG TARGETOS
+ARG TARGETARCH
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} \
     go build -o pmcp \
