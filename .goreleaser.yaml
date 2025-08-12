@@ -102,9 +102,3 @@ release:
   # Default: true.
   # Templates: allowed. (Since v2.6)
   make_latest: false
-
-  footer: >-
-
-    ---
-
-    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
