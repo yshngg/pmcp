@@ -7,18 +7,18 @@ ARG BUILD_DATE=unknown
 # Build stage
 FROM --platform=$BUILDPLATFORM golang:1.24 AS builder
 
-ARG TARGETOS
-ARG TARGETARCH
-ARG VERSION_NUMBER
-ARG GIT_COMMIT
-ARG BUILD_DATE
-
 WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+
+ARG VERSION_NUMBER
+ARG GIT_COMMIT
+ARG BUILD_DATE
+ARG TARGETOS
+ARG TARGETARCH
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} \
     go build -o pmcp \
@@ -31,5 +31,7 @@ FROM alpine:3.22
 WORKDIR /
 
 COPY --from=builder /app/pmcp /pmcp
+
+USER nobody
 
 ENTRYPOINT ["/pmcp"]
