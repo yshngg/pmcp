@@ -5,7 +5,7 @@ ARG GIT_COMMIT=unknown
 ARG BUILD_DATE=unknown
 
 # Build stage
-FROM --platform=$BUILDPLATFORM golang:1.24 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.25 AS builder
 
 WORKDIR /app
 
