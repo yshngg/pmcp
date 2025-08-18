@@ -6,6 +6,20 @@ import (
 	"time"
 )
 
+type invalidFormatError struct {
+	timeStr string
+}
+
+func (e invalidFormatError) Error() string {
+	return fmt.Sprintf("invalid time format: %s (expected RFC3339 or Unix timestamp)", e.timeStr)
+}
+
+func InvalidFormatError(timeStr string) error {
+	return invalidFormatError{timeStr}
+}
+
+var _ error = invalidFormatError{}
+
 // ParseTime parses a time string in either RFC3339 or Unix timestamp format.
 func ParseTime(timeStr string) (time.Time, error) {
 	// Try RFC3339 format first
@@ -18,5 +32,5 @@ func ParseTime(timeStr string) (time.Time, error) {
 		return time.Unix(unix, 0), nil
 	}
 
-	return time.Time{}, fmt.Errorf("invalid time format: %s (expected RFC3339 or Unix timestamp)", timeStr)
+	return time.Time{}, InvalidFormatError(timeStr)
 }
