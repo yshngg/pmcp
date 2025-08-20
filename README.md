@@ -163,7 +163,7 @@ PMCP maintains **100% compatibility** with the Prometheus HTTP API v1. Every too
 | PMCP Tool | Prometheus Endpoint | HTTP Method | Purpose |
 |-----------|-------------------|-------------|---------|
 | Find Series by Labels | `/api/v1/series` | GET/POST | Find matching time series |
-| List Label Names | `/api/v1/labels` | GET | List all label names |
+| List Label Names | `/api/v1/labels` | GET/POST | List all label names |
 | List Label Values | `/api/v1/label/:name/values` | GET | List values for a specific label |
 | Target Discovery | `/api/v1/targets` | GET | Get target information |
 | Target Metadata Query | `/api/v1/targets/metadata` | GET | Get metadata from targets |
@@ -192,9 +192,9 @@ PMCP maintains **100% compatibility** with the Prometheus HTTP API v1. Every too
 
 | PMCP Tool | Prometheus Endpoint | HTTP Method | Purpose |
 |-----------|-------------------|-------------|---------|
-| TSDB Snapshot | `/api/v1/admin/tsdb/snapshot` | POST | Create TSDB snapshot |
-| Delete Series | `/api/v1/admin/tsdb/delete_series` | POST | Delete time series data |
-| Clean Tombstones | `/api/v1/admin/tsdb/clean_tombstones` | POST | Clean deleted data |
+| TSDB Snapshot | `/api/v1/admin/tsdb/snapshot` | POST/PUT | Create TSDB snapshot |
+| Delete Series | `/api/v1/admin/tsdb/delete_series` | POST/PUT | Delete time series data |
+| Clean Tombstones | `/api/v1/admin/tsdb/clean_tombstones` | POST/PUT | Clean deleted data |
 
 ### Management APIs
 
