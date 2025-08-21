@@ -21,8 +21,8 @@ func TestInfoString(t *testing.T) {
 			expected: []string{
 				"Prometheus Model Context Protocol Server",
 				"Version: v1.2.3",
-				"Commit: abcdef1",
-				"Build: 2025-08-21T12:00:00Z",
+				"Commit:  abcdef1",
+				"Build:   2025-08-21T12:00:00Z",
 			},
 		},
 		{
