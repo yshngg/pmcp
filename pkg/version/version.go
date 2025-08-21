@@ -7,6 +7,11 @@ import (
 	"time"
 )
 
+const (
+	NumberUnknown = "(unknown)"
+	NumberDevel   = "(devel)"
+)
+
 type info struct {
 	Number    string
 	GitCommit string
@@ -19,17 +24,21 @@ func (i info) String() string {
 		panic(err)
 	}
 	if len(i.Number) != 0 {
-		if _, err := builder.WriteString(fmt.Sprintf("Version: v%s\n", i.Number)); err != nil {
+		v := i.Number
+		if v != NumberUnknown && v != NumberDevel {
+			v = "v" + v
+		}
+		if _, err := builder.WriteString(fmt.Sprintf("Version:\t%s\n", v)); err != nil {
 			panic(err)
 		}
 	}
 	if len(i.GitCommit) != 0 {
-		if _, err := builder.WriteString(fmt.Sprintf("Commit: %s\n", i.GitCommit)); err != nil {
+		if _, err := builder.WriteString(fmt.Sprintf("Commit:\t%s\n", i.GitCommit)); err != nil {
 			panic(err)
 		}
 	}
 	if len(i.BuildDate) != 0 {
-		if _, err := builder.WriteString(fmt.Sprintf("Build: %s", i.BuildDate)); err != nil {
+		if _, err := builder.WriteString(fmt.Sprintf("Build:\t%s", i.BuildDate)); err != nil {
 			panic(err)
 		}
 	}
@@ -38,7 +47,7 @@ func (i info) String() string {
 
 func (i *info) Set(versionNumber, gitCommit, buildDate string) {
 	if len(versionNumber) == 0 {
-		versionNumber = "(unknown)"
+		versionNumber = NumberUnknown
 	}
 	i.Number, _ = strings.CutPrefix(versionNumber, "v")
 
@@ -64,12 +73,11 @@ var (
 
 func init() {
 	if buildInfo, ok := debug.ReadBuildInfo(); ok {
-		if len(buildInfo.Main.Version) != 0 {
-			Number = buildInfo.Main.Version
+		if v := buildInfo.Main.Version; len(v) != 0 && v != NumberDevel {
+			Number = v
 		}
 
-		settings := buildInfo.Settings
-		for _, setting := range settings {
+		for _, setting := range buildInfo.Settings {
 			if setting.Key == "vcs.revision" {
 				GitCommit = setting.Value
 				if len(GitCommit) > 7 {

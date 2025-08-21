@@ -1,5 +1,5 @@
 # Get version information from git and system
-VERSION ?= 0.1.0-dev
+VERSION ?= (unknown)
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
 BUILD_DATE := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 
