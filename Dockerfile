@@ -1,8 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG VERSION_NUMBER=0.0.0-dev
-ARG GIT_COMMIT=unknown
-ARG BUILD_DATE=unknown
+ARG VERSION_NUMBER=(unknown)
 
 # Build stage
 FROM --platform=$BUILDPLATFORM golang:1.25 AS builder
