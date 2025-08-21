@@ -68,8 +68,7 @@ jobs:
         id: build-args
         run: |
           echo "VERSION_NUMBER=${{ steps.meta.outputs.version }}" >> $GITHUB_OUTPUT
-          # echo "GIT_COMMIT=$(shell git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "GIT_COMMIT=${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "GIT_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
       - name: Build and push by digest
