@@ -2,7 +2,7 @@ package bindingblocks
 
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/pkg/prometheus/api"
+	"github.com/yshngg/pmcp/internal/prometheus/api"
 )
 
 type Binder interface {

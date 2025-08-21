@@ -10,7 +10,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
-	"github.com/yshngg/pmcp/pkg/utils"
+	"github.com/yshngg/pmcp/internal/utils"
 )
 
 const RangeQueryEndpoint = "/query_range"
