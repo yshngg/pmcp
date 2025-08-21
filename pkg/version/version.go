@@ -1,6 +1,11 @@
 package version
 
-import "fmt"
+import (
+	"fmt"
+	"runtime/debug"
+	"strings"
+	"time"
+)
 
 type info struct {
 	Number    string
@@ -9,7 +14,40 @@ type info struct {
 }
 
 func (i info) String() string {
-	return fmt.Sprintf("PMCP Version: v%s\nGit Commit: %s\nBuild Date: %s", i.Number, i.GitCommit, i.BuildDate)
+	builder := strings.Builder{}
+	if _, err := builder.WriteString("Prometheus Model Context Protocol Server\n"); err != nil {
+		panic(err)
+	}
+	if len(i.Number) != 0 {
+		if _, err := builder.WriteString(fmt.Sprintf("Version: v%s\n", i.Number)); err != nil {
+			panic(err)
+		}
+	}
+	if len(i.GitCommit) != 0 {
+		if _, err := builder.WriteString(fmt.Sprintf("Commit: %s\n", i.GitCommit)); err != nil {
+			panic(err)
+		}
+	}
+	if len(i.BuildDate) != 0 {
+		if _, err := builder.WriteString(fmt.Sprintf("Build: %s", i.BuildDate)); err != nil {
+			panic(err)
+		}
+	}
+	return builder.String()
+}
+
+func (i *info) Set(versionNumber, gitCommit, buildDate string) {
+	if len(versionNumber) == 0 {
+		versionNumber = "(unknown)"
+	}
+	i.Number, _ = strings.CutPrefix(versionNumber, "v")
+
+	i.GitCommit = gitCommit
+
+	if len(buildDate) == 0 {
+		buildDate = time.Now().UTC().Format(time.RFC3339)
+	}
+	i.BuildDate = buildDate
 }
 
 var (
@@ -18,16 +56,25 @@ var (
 	BuildDate string
 
 	Info = info{
-		Number:    "0.1.0-dev",
-		GitCommit: "HEAD",
-		BuildDate: "2006-01-02T15:04:05Z07:00",
+		Number:    "(unknown)",
+		GitCommit: "",
+		BuildDate: "",
 	}
 )
 
 func init() {
-	if len(Number) != 0 {
-		Info.Number = Number
-		Info.GitCommit = GitCommit
-		Info.BuildDate = BuildDate
+	if buildInfo, ok := debug.ReadBuildInfo(); ok {
+		if len(buildInfo.Main.Version) != 0 {
+			Number = buildInfo.Main.Version
+		}
+
+		settings := buildInfo.Settings
+		for _, setting := range settings {
+			if setting.Key == "vcs.revision" {
+				GitCommit = setting.Value[:7]
+				break
+			}
+		}
 	}
+	Info.Set(Number, GitCommit, BuildDate)
 }
