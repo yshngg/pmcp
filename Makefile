@@ -9,9 +9,9 @@ PACKAGE := $(shell go list -m)
 
 # Build flags
 LDFLAGS := -s -w
-LDFLAGS += -X $(PACKAGE)/pkg/version.Number=$(VERSION)
-LDFLAGS += -X $(PACKAGE)/pkg/version.GitCommit=$(GIT_COMMIT)
-LDFLAGS += -X $(PACKAGE)/pkg/version.BuildDate=$(BUILD_DATE)
+LDFLAGS += -X $(PACKAGE)/internal/version.Number=$(VERSION)
+LDFLAGS += -X $(PACKAGE)/internal/version.GitCommit=$(GIT_COMMIT)
+LDFLAGS += -X $(PACKAGE)/internal/version.BuildDate=$(BUILD_DATE)
 
 # Default target
 all: build

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/pkg/utils"
+	"github.com/yshngg/pmcp/internal/utils"
 )
 
 // URL query parameters:
