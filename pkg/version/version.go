@@ -71,7 +71,10 @@ func init() {
 		settings := buildInfo.Settings
 		for _, setting := range settings {
 			if setting.Key == "vcs.revision" {
-				GitCommit = setting.Value[:7]
+				GitCommit = setting.Value
+				if len(GitCommit) > 7 {
+					GitCommit = GitCommit[:7]
+				}
 				break
 			}
 		}
