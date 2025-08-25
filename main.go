@@ -38,7 +38,10 @@ func main() {
 	)
 	fs.Usage = usageFor(fs, "pmcp [flags]")
 	// Parse command-line flags.
-	fs.Parse(os.Args[1:])
+	if err := fs.Parse(os.Args[1:]); err != nil {
+		slog.Error("parse args", "err", err)
+		os.Exit(1)
+	}
 
 	if *printVersion {
 		fmt.Println(version.Info)
@@ -122,9 +125,14 @@ func usageFor(fs *flag.FlagSet, short string) func() {
 			if def == "" {
 				def = "..."
 			}
-			fmt.Fprintf(w, "\t-%s %s\t%s\n", f.Name, def, f.Usage)
+			_, err := fmt.Fprintf(w, "\t-%s %s\t%s\n", f.Name, def, f.Usage)
+			if err != nil {
+				panic(err)
+			}
 		})
-		w.Flush()
+		if err := w.Flush(); err != nil {
+			panic(err)
+		}
 		fmt.Fprintf(os.Stderr, "\n")
 		fmt.Fprintf(os.Stderr, "VERSION\n")
 		fmt.Fprintf(os.Stderr, "  %s\n", version.Info.Number)
