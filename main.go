@@ -50,7 +50,7 @@ func main() {
 
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "pmcp",
-		Version: version.Info.Number,
+		Version: string(version.Info.Number),
 	}, nil)
 
 	promCli, err := api.New(*promAddr, http.DefaultClient, nil)

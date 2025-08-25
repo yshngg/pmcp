@@ -16,8 +16,17 @@ const (
 	GitCommitLength = 7
 )
 
+type number string
+
+func (n number) String() string {
+	if len(n) != 0 && n != NumberUnknown && n != NumberDevel {
+		n = "v" + n
+	}
+	return string(n)
+}
+
 type info struct {
-	Number    string
+	Number    number
 	GitCommit string
 	BuildDate string
 }
@@ -27,15 +36,11 @@ func (i info) String() string {
 	w := tabwriter.NewWriter(&buff, 0, 2, 2, ' ', 0)
 
 	if len(i.Number) != 0 {
-		v := i.Number
-		if v != NumberUnknown && v != NumberDevel {
-			v = "v" + v
-		}
-
-		if _, err := fmt.Fprintf(w, "Version:\t%s\n", v); err != nil {
+		if _, err := fmt.Fprintf(w, "Version:\t%s\n", i.Number); err != nil {
 			panic(err)
 		}
 	}
+
 	if len(i.GitCommit) != 0 {
 		if _, err := fmt.Fprintf(w, "Commit:\t%s\n", i.GitCommit); err != nil {
 			panic(err)
@@ -57,7 +62,8 @@ func (i *info) Set(versionNumber, gitCommit, buildDate string) {
 	if len(versionNumber) == 0 {
 		versionNumber = NumberUnknown
 	}
-	i.Number, _ = strings.CutPrefix(versionNumber, "v")
+	numberStr, _ := strings.CutPrefix(string(versionNumber), "v")
+	i.Number = number(numberStr)
 
 	i.GitCommit = gitCommit
 
