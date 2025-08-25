@@ -19,10 +19,9 @@ func TestInfoString(t *testing.T) {
 				BuildDate: "2025-08-21T12:00:00Z",
 			},
 			expected: []string{
-				"Prometheus Model Context Protocol Server",
-				"Version: v1.2.3",
-				"Commit:  abcdef1",
-				"Build:   2025-08-21T12:00:00Z",
+				"Version:  v1.2.3",
+				"Commit:   abcdef1",
+				"Build:    2025-08-21T12:00:00Z",
 			},
 		},
 		{
@@ -32,9 +31,7 @@ func TestInfoString(t *testing.T) {
 				GitCommit: "",
 				BuildDate: "",
 			},
-			expected: []string{
-				"Prometheus Model Context Protocol Server",
-			},
+			expected: []string{},
 		},
 	}
 
