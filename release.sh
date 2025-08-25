@@ -11,6 +11,10 @@ echo "The commit logs since the most recent tag:"
 if [[ "$RECENT" == 'none' ]]; then
     git log --oneline
 else
+    if [[ -z $(git rev-list --max-count=1 "${RECENT}..HEAD") ]]; then
+        echo "No new commits since tag $RECENT. Aborting."
+        exit 1
+    fi
     git log --oneline "${RECENT}...HEAD"
 fi
 
@@ -26,6 +30,12 @@ elif [[ "$VERSION" == v* ]]; then
     exit 1
 elif ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "Error: Version must be in the format X.Y.Z (e.g., 1.2.3)." >&2
+    exit 1
+fi
+
+# Check if tag already exists
+if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+    echo "Error: Tag v$VERSION already exists. To delete, run: git tag -d v$VERSION" >&2
     exit 1
 fi
 
