@@ -22,7 +22,7 @@ type info struct {
 
 func (i info) String() string {
 	builder := strings.Builder{}
-	if _, err := builder.WriteString("Prometheus Model Context Protocol Server\n\n"); err != nil {
+	if _, err := builder.WriteString("Prometheus Model Context Protocol Server\n"); err != nil {
 		panic(err)
 	}
 	if len(i.Number) != 0 {
