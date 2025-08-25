@@ -32,8 +32,7 @@ func (i info) String() string {
 			v = "v" + v
 		}
 
-		if n, err := fmt.Fprintf(w, "Version:\t%s\n", v); err != nil {
-			fmt.Println(n)
+		if _, err := fmt.Fprintf(w, "Version:\t%s\n", v); err != nil {
 			panic(err)
 		}
 	}
