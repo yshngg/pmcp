@@ -2,10 +2,19 @@
 
 set -euo pipefail
 
-# The most recent tag
-echo "The most recent tag: $(git describe --tags --abbrev=0 2>/dev/null || echo 'none')"
+# The most recent tag, or 'none' if no tags exist
+RECENT=$(git describe --tags --abbrev=0 2>/dev/null || echo 'none')
+echo "The most recent tag: $RECENT"
 
-# Prompt for version
+# Show commit logs since the most recent tag
+echo "The commit logs since the most recent tag:"
+if [[ "$RECENT" == 'none' ]]; then
+    git log --oneline
+else
+    git log --oneline "${RECENT}...HEAD"
+fi
+
+# Prompt user for the new semantic version (e.g., 1.2.3)
 read -p "Semantic version: " VERSION
 
 # Validate version input
@@ -20,13 +29,12 @@ elif ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     exit 1
 fi
 
-# Get git commit hash
+# The current git commit short hash
 REV=$(git rev-parse --short HEAD)
 
-# Create annotated tag
-echo "Tagging $REV as v$VERSION"
+# Create an annotated tag for the release
+echo "Tagging commit $REV as v$VERSION"
 git tag --annotate "v$VERSION" -m "Release v$VERSION"
 
-# Push instructions
-echo "Be sure to: git push --tags"
-echo
+# Remind user to push tags to remote
+echo "Release tag created. To publish, run: git push --tags"
