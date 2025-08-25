@@ -1,9 +1,11 @@
 package version
 
 import (
+	"bytes"
 	"fmt"
 	"runtime/debug"
 	"strings"
+	"text/tabwriter"
 	"time"
 )
 
@@ -21,30 +23,35 @@ type info struct {
 }
 
 func (i info) String() string {
-	builder := strings.Builder{}
-	if _, err := builder.WriteString("Prometheus Model Context Protocol Server\n"); err != nil {
-		panic(err)
-	}
+	var buff bytes.Buffer
+	w := tabwriter.NewWriter(&buff, 0, 2, 2, ' ', 0)
+
 	if len(i.Number) != 0 {
 		v := i.Number
 		if v != NumberUnknown && v != NumberDevel {
 			v = "v" + v
 		}
-		if _, err := builder.WriteString(fmt.Sprintf("Version: %s\n", v)); err != nil {
+
+		if n, err := fmt.Fprintf(w, "Version:\t%s\n", v); err != nil {
+			fmt.Println(n)
 			panic(err)
 		}
 	}
 	if len(i.GitCommit) != 0 {
-		if _, err := builder.WriteString(fmt.Sprintf("Commit:  %s\n", i.GitCommit)); err != nil {
+		if _, err := fmt.Fprintf(w, "Commit:\t%s\n", i.GitCommit); err != nil {
 			panic(err)
 		}
 	}
 	if len(i.BuildDate) != 0 {
-		if _, err := builder.WriteString(fmt.Sprintf("Build:   %s", i.BuildDate)); err != nil {
+		if _, err := fmt.Fprintf(w, "Build:\t%s\n", i.BuildDate); err != nil {
 			panic(err)
 		}
 	}
-	return builder.String()
+
+	if err := w.Flush(); err != nil {
+		panic(err)
+	}
+	return buff.String()
 }
 
 func (i *info) Set(versionNumber, gitCommit, buildDate string) {
