@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# The regular expression (RegEx) to check a SemVer string
+readonly SEMVER_REGEX='^([0]|[1-9][0-9]*)\.([0]|[1-9][0-9]*)\.([0]|[1-9][0-9]*)(-([0]|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$'
+
 # The most recent tag, or 'none' if no tags exist
 RECENT=$(git describe --tags --abbrev=0 2>/dev/null || echo 'none')
 echo "The most recent tag: $RECENT"
@@ -28,8 +31,8 @@ if [[ -z "$VERSION" ]]; then
 elif [[ "$VERSION" == v* ]]; then
     echo "Error: Use the raw semantic version, without a 'v' prefix." >&2
     exit 1
-elif ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "Error: Version must be in the format X.Y.Z (e.g., 1.2.3)." >&2
+elif ! [[ "$VERSION" =~ $SEMVER_REGEX ]]; then
+    echo "Error: Version must be a valid Semantic Version (see https://semver.org)." >&2
     exit 1
 fi
 
