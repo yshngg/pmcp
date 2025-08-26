@@ -105,6 +105,16 @@ func init() {
 					}
 				}
 			}
+
+			// If we didn't find vcs.revision, try the old key for backward compatibility
+			if len(GitCommit) == 0 {
+				for _, setting := range buildInfo.Settings {
+					if setting.Key == "gitrevision" {
+						GitCommit = setting.Value
+						break
+					}
+				}
+			}
 		}
 	}
 
