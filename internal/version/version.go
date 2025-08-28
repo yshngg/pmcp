@@ -75,7 +75,7 @@ func (i *info) Set(versionNumber, gitCommit, buildDate string) {
 
 var (
 	Number    string
-	GitCommit string
+	GitCommit string = "$Id$" // ref: https://git-scm.com/docs/gitattributes#_ident
 	BuildDate string
 
 	Info = info{
@@ -86,27 +86,34 @@ var (
 )
 
 func init() {
-	if len(Number) == 0 || len(GitCommit) == 0 {
-		if buildInfo, ok := debug.ReadBuildInfo(); ok {
-			if len(Number) == 0 {
-				if v := buildInfo.Main.Version; len(v) != 0 {
-					Number = v
-				}
-			}
+	defer func() { Info.Set(Number, GitCommit, BuildDate) }()
 
-			if len(GitCommit) == 0 {
-				for _, setting := range buildInfo.Settings {
-					if setting.Key == "vcs.revision" {
-						GitCommit = setting.Value
-						if len(GitCommit) > GitCommitLength {
-							GitCommit = GitCommit[:GitCommitLength]
-						}
-						break
-					}
-				}
+	// Parse ident expansion: "$Id: <oid> $"
+	if strings.HasPrefix(GitCommit, "$Id: ") && strings.HasSuffix(GitCommit, " $") {
+		GitCommit = GitCommit[5 : len(GitCommit)-2]
+	}
+	if GitCommit == "$Id"+"$" {
+		GitCommit = ""
+	}
+
+	if buildInfo, ok := debug.ReadBuildInfo(); ok {
+		if len(Number) == 0 {
+			if v := buildInfo.Main.Version; len(v) != 0 {
+				Number = v
+			}
+		}
+
+		// Prefer the real commit SHA from build info over ident (blob OID).
+		for _, setting := range buildInfo.Settings {
+			if setting.Key == "vcs.revision" && len(setting.Value) != 0 {
+				GitCommit = setting.Value
+				break
 			}
 		}
 	}
 
-	Info.Set(Number, GitCommit, BuildDate)
+	// Normalize to short form for display.
+	if len(GitCommit) > GitCommitLength {
+		GitCommit = GitCommit[:GitCommitLength]
+	}
 }
