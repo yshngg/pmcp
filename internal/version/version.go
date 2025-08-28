@@ -88,6 +88,8 @@ var (
 func init() {
 	if len(Number) == 0 && len(GitCommit) == 0 {
 		if buildInfo, ok := debug.ReadBuildInfo(); ok {
+			fmt.Printf("Build Info: %v\n", buildInfo)
+
 			if len(Number) == 0 {
 				if v := buildInfo.Main.Version; len(v) != 0 {
 					Number = v
