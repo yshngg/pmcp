@@ -86,14 +86,13 @@ var (
 )
 
 func init() {
-	defer Info.Set(Number, GitCommit, BuildDate)
+	defer func() { Info.Set(Number, GitCommit, BuildDate) }()
 
-	// eg: "$Id$"
-	if strings.HasPrefix(GitCommit, "$Id$") {
+	// Parse ident expansion: "$Id: <oid> $"
+	if strings.HasPrefix(GitCommit, "$Id: ") && strings.HasSuffix(GitCommit, " $") {
 		GitCommit = GitCommit[5 : len(GitCommit)-2]
 	}
-
-	if GitCommit == "$Id$" {
+	if GitCommit == "$Id"+"$" {
 		GitCommit = ""
 	}
 
@@ -104,16 +103,17 @@ func init() {
 			}
 		}
 
-		if len(GitCommit) == 0 {
-			for _, setting := range buildInfo.Settings {
-				if setting.Key == "vcs.revision" {
-					GitCommit = setting.Value
-					if len(GitCommit) > GitCommitLength {
-						GitCommit = GitCommit[:GitCommitLength]
-					}
-					break
-				}
+		// Prefer the real commit SHA from build info over ident (blob OID).
+		for _, setting := range buildInfo.Settings {
+			if setting.Key == "vcs.revision" && len(setting.Value) != 0 {
+				GitCommit = setting.Value
+				break
 			}
 		}
+	}
+
+	// Normalize to short form for display.
+	if len(GitCommit) > GitCommitLength {
+		GitCommit = GitCommit[:GitCommitLength]
 	}
 }
