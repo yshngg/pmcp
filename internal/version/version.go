@@ -86,26 +86,25 @@ var (
 )
 
 func init() {
-	if len(Number) == 0 || len(GitCommit) == 0 {
-		if buildInfo, ok := debug.ReadBuildInfo(); ok {
-			if len(Number) == 0 {
-				if v := buildInfo.Main.Version; len(v) != 0 {
-					Number = v
-				}
+	if buildInfo, ok := debug.ReadBuildInfo(); ok {
+		if len(Number) == 0 {
+			if v := buildInfo.Main.Version; len(v) != 0 {
+				Number = v
 			}
+		}
 
-			if len(GitCommit) == 0 {
-				for _, setting := range buildInfo.Settings {
-					if setting.Key == "vcs.revision" {
-						GitCommit = setting.Value
-						if len(GitCommit) > GitCommitLength {
-							GitCommit = GitCommit[:GitCommitLength]
-						}
-						break
-					}
+		if len(GitCommit) == 0 {
+			for _, setting := range buildInfo.Settings {
+				if setting.Key == "vcs.revision" {
+					GitCommit = setting.Value
+					break
 				}
 			}
 		}
+	}
+
+	if len(GitCommit) > GitCommitLength {
+		GitCommit = GitCommit[:GitCommitLength]
 	}
 
 	Info.Set(Number, GitCommit, BuildDate)
