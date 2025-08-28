@@ -86,7 +86,7 @@ var (
 )
 
 func init() {
-	if len(Number) == 0 && len(GitCommit) == 0 {
+	if len(Number) == 0 || len(GitCommit) == 0 {
 		if buildInfo, ok := debug.ReadBuildInfo(); ok {
 			if len(Number) == 0 {
 				if v := buildInfo.Main.Version; len(v) != 0 {
