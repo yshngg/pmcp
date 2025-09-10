@@ -12,6 +12,8 @@ type ExpressionQuerier interface {
 	RangeQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *RangeQueryArguments) (*mcp.CallToolResult, *RangeQueryResult, error)
 }
 
+// NewExpressionQuerier creates and returns an ExpressionQuerier backed by the provided PrometheusAPI.
+// The returned implementation delegates queries to the given API.
 func NewExpressionQuerier(api api.PrometheusAPI) ExpressionQuerier {
 	return &expressionQuerier{API: api}
 }
