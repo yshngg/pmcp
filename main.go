@@ -23,7 +23,13 @@ const Schema = "prom"
 // selecting the transport mechanism (stdio, HTTP, or SSE) based on command-line flags.
 // It initializes the Prometheus client, binds query handlers,
 // and serves requests until termination.
-// The function exits the program on critical errors or when printing version information.
+// main starts the pmcp server: it parses command-line flags, constructs the MCP
+// server and Prometheus client, binds query handlers, selects the transport
+// (stdio, http Streamable handler, or deprecated HTTP+SSE) and runs the chosen
+// transport. For HTTP/SSE it registers /ping and /mcp endpoints. The function
+// prints version information and exits when the -version flag is set, and it
+// terminates the process with non-zero status on critical initialization or
+// runtime errors.
 func main() {
 	fs := flag.NewFlagSet("pmcp", flag.ExitOnError)
 	var (

@@ -13,6 +13,7 @@ type TSDBAdmin interface {
 	CleanTombstonesHandler(ctx context.Context, request *mcp.CallToolRequest, input *CleanTombstonesParams) (*mcp.CallToolResult, *CleanTombstonesResult, error)
 }
 
+// NewTSDBAdmin returns a TSDBAdmin implementation that delegates Prometheus operations to the provided PrometheusAPI.
 func NewTSDBAdmin(api api.PrometheusAPI) TSDBAdmin {
 	return &tsdbAdmin{
 		API: api,
