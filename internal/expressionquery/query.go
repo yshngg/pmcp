@@ -8,8 +8,8 @@ import (
 )
 
 type ExpressionQuerier interface {
-	InstantQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[InstantQueryArguments]) (*mcp.CallToolResultFor[InstantQueryResult], error)
-	RangeQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[RangeQueryArguments]) (*mcp.CallToolResultFor[RangeQueryResult], error)
+	InstantQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *InstantQueryArguments) (*mcp.CallToolResult, *InstantQueryResult, error)
+	RangeQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *RangeQueryArguments) (*mcp.CallToolResult, *RangeQueryResult, error)
 }
 
 func NewExpressionQuerier(api api.PrometheusAPI) ExpressionQuerier {

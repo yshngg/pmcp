@@ -106,7 +106,7 @@ func main() {
 
 	// Run the server over stdin/stdout, until the client disconnects
 	slog.Info("Listening on stdio")
-	if err := server.Run(context.Background(), mcp.NewStdioTransport()); err != nil {
+	if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
 		slog.Error("run server with stdio transport", "err", err)
 		os.Exit(1)
 	}

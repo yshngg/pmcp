@@ -8,9 +8,9 @@ import (
 )
 
 type TSDBAdmin interface {
-	SnapshotHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[SnapshotParams]) (*mcp.CallToolResultFor[SnapshotResult], error)
-	DeleteSeriesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[DeleteSeriesParams]) (*mcp.CallToolResultFor[DeleteSeriesResult], error)
-	CleanTombstonesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[CleanTombstonesParams]) (*mcp.CallToolResultFor[CleanTombstonesResult], error)
+	SnapshotHandler(ctx context.Context, request *mcp.CallToolRequest, input *SnapshotParams) (*mcp.CallToolResult, *SnapshotResult, error)
+	DeleteSeriesHandler(ctx context.Context, request *mcp.CallToolRequest, input *DeleteSeriesParams) (*mcp.CallToolResult, *DeleteSeriesResult, error)
+	CleanTombstonesHandler(ctx context.Context, request *mcp.CallToolRequest, input *CleanTombstonesParams) (*mcp.CallToolResult, *CleanTombstonesResult, error)
 }
 
 func NewTSDBAdmin(api api.PrometheusAPI) TSDBAdmin {

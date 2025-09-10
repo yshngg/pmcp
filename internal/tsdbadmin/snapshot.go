@@ -2,7 +2,6 @@ package tsdbadmin
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
@@ -16,19 +15,10 @@ type SnapshotParams struct {
 }
 type SnapshotResult = v1.SnapshotResult
 
-func (a *tsdbAdmin) SnapshotHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[SnapshotParams]) (*mcp.CallToolResultFor[SnapshotResult], error) {
-	result, err := a.API.Snapshot(ctx, params.Arguments.SkipHead)
+func (a *tsdbAdmin) SnapshotHandler(ctx context.Context, request *mcp.CallToolRequest, input *SnapshotParams) (*mcp.CallToolResult, *SnapshotResult, error) {
+	result, err := a.API.Snapshot(ctx, input.SkipHead)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-
-	return &mcp.CallToolResultFor[SnapshotResult]{
-		Content:           []mcp.Content{&mcp.TextContent{Text: string(content)}},
-		StructuredContent: result,
-	}, nil
+	return nil, &result, nil
 }

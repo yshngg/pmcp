@@ -2,7 +2,6 @@ package expressionquery
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
 	"time"
 
@@ -33,40 +32,31 @@ type InstantQueryResult struct {
 	Warnings v1.Warnings `json:"warnings,omitempty"`
 }
 
-func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[InstantQueryArguments]) (*mcp.CallToolResultFor[InstantQueryResult], error) {
+func (q *expressionQuerier) InstantQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *InstantQueryArguments) (*mcp.CallToolResult, *InstantQueryResult, error) {
 	var (
 		ts  time.Time
 		err error
 	)
-	if ts, err = utils.ParseTime(params.Arguments.Time); err != nil {
+	if ts, err = utils.ParseTime(input.Time); err != nil {
 		slog.Warn("parse time", "err", err)
 	}
 
 	opts := make([]v1.Option, 0)
-	if params.Arguments.Timeout != 0 {
-		opts = append(opts, v1.WithTimeout(params.Arguments.Timeout))
+	if input.Timeout != 0 {
+		opts = append(opts, v1.WithTimeout(input.Timeout))
 	}
-	if params.Arguments.Limit != 0 {
-		opts = append(opts, v1.WithLimit(params.Arguments.Limit))
+	if input.Limit != 0 {
+		opts = append(opts, v1.WithLimit(input.Limit))
 	}
 
-	result := InstantQueryResult{}
+	result := &InstantQueryResult{}
 	if result.Value, result.Warnings, err = q.API.Query(
 		ctx,
-		params.Arguments.Query,
+		input.Query,
 		ts,
 		opts...,
 	); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-	return &mcp.CallToolResultFor[InstantQueryResult]{
-		Content: []mcp.Content{&mcp.TextContent{
-			Text: string(content),
-		}},
-		StructuredContent: result,
-	}, nil
+	return nil, result, nil
 }

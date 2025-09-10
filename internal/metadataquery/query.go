@@ -8,12 +8,12 @@ import (
 )
 
 type MetadataQuerier interface {
-	SeriesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[SeriesArguments]) (*mcp.CallToolResultFor[SeriesResult], error)
-	LabelNamesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelNamesArguments]) (*mcp.CallToolResultFor[LabelNamesResult], error)
-	LabelValuesHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelValuesArguments]) (*mcp.CallToolResultFor[LabelValuesResult], error)
+	SeriesHandler(ctx context.Context, request *mcp.CallToolRequest, input *SeriesArguments) (*mcp.CallToolResult, *SeriesResult, error)
+	LabelNamesHandler(ctx context.Context, request *mcp.CallToolRequest, input *LabelNamesArguments) (*mcp.CallToolResult, *LabelNamesResult, error)
+	LabelValuesHandler(ctx context.Context, request *mcp.CallToolRequest, input *LabelValuesArguments) (*mcp.CallToolResult, *LabelValuesResult, error)
 
-	TargetMetadataQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[TargetMetadataQueryParams]) (*mcp.CallToolResultFor[TargetMetadataQueryResult], error)
-	MetricsMetadataQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[MetricsMetadataQueryParams]) (*mcp.CallToolResultFor[MetricsMetadataQueryResult], error)
+	TargetMetadataQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *TargetMetadataQueryParams) (*mcp.CallToolResult, *TargetMetadataQueryResult, error)
+	MetricsMetadataQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *MetricsMetadataQueryParams) (*mcp.CallToolResult, *MetricsMetadataQueryResult, error)
 }
 
 func NewMetadataQuerier(api api.PrometheusAPI) MetadataQuerier {

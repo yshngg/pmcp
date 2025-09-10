@@ -2,7 +2,6 @@ package targetdiscover
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -24,17 +23,17 @@ type TargetDiscoverParams struct {
 
 type TargetDiscoverResult = v1.TargetsResult
 
-func (d *targetDiscoverer) TargetDiscoverHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[TargetDiscoverParams]) (*mcp.CallToolResultFor[TargetDiscoverResult], error) {
+func (d *targetDiscoverer) TargetDiscoverHandler(ctx context.Context, request *mcp.CallToolRequest, input *TargetDiscoverParams) (*mcp.CallToolResult, *TargetDiscoverResult, error) {
 	var (
-		result TargetDiscoverResult
+		result = &TargetDiscoverResult{}
 		err    error
 	)
-	if result, err = d.API.Targets(ctx); err != nil {
-		return nil, err
+	if *result, err = d.API.Targets(ctx); err != nil {
+		return nil, nil, err
 	}
 
 	// Filter by scrape pool, which only affects active targets.
-	scrapePool := params.Arguments.ScrapePool
+	scrapePool := input.ScrapePool
 	if len(scrapePool) != 0 {
 		// Dropped targets don't have scrape pool field
 		result.Dropped = nil
@@ -50,7 +49,7 @@ func (d *targetDiscoverer) TargetDiscoverHandler(ctx context.Context, _ *mcp.Ser
 	}
 
 	// Filter by state
-	state := params.Arguments.State
+	state := input.State
 	if len(state) == 0 {
 		state = TargetStateAny
 	}
@@ -62,16 +61,7 @@ func (d *targetDiscoverer) TargetDiscoverHandler(ctx context.Context, _ *mcp.Ser
 	case TargetStateAny:
 		// keep both active and dropped targets
 	default:
-		return nil, fmt.Errorf("invalid state: %s, must be active, dropped or any", params.Arguments.State)
+		return nil, nil, fmt.Errorf("invalid state: %s, must be active, dropped or any", input.State)
 	}
-
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-
-	return &mcp.CallToolResultFor[TargetDiscoverResult]{
-		Content:           []mcp.Content{&mcp.TextContent{Text: string(content)}},
-		StructuredContent: result,
-	}, nil
+	return nil, result, nil
 }

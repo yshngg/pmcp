@@ -2,7 +2,6 @@ package expressionquery
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"log/slog"
 	"time"
@@ -38,36 +37,36 @@ type RangeQueryResult struct {
 	Warnings v1.Warnings `json:"warnings,omitempty"`
 }
 
-func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[RangeQueryArguments]) (*mcp.CallToolResultFor[RangeQueryResult], error) {
+func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *RangeQueryArguments) (*mcp.CallToolResult, *RangeQueryResult, error) {
 	var (
 		start, end time.Time
 		step       time.Duration
 		err        error
 	)
-	if start, err = utils.ParseTime(params.Arguments.Start); err != nil {
+	if start, err = utils.ParseTime(input.Start); err != nil {
 		slog.Warn("parse start time", "err", err)
 	}
-	if end, err = utils.ParseTime(params.Arguments.End); err != nil {
+	if end, err = utils.ParseTime(input.End); err != nil {
 		slog.Warn("parse end time", "err", err)
 	}
 
-	if params.Arguments.Step == 0 {
-		return nil, errors.New("step cannot be 0")
+	if input.Step == 0 {
+		return nil, nil, errors.New("step cannot be 0")
 	}
-	step = params.Arguments.Step * time.Second
+	step = input.Step * time.Second
 
 	opts := make([]v1.Option, 0)
-	if params.Arguments.Timeout != 0 {
-		opts = append(opts, v1.WithTimeout(params.Arguments.Timeout))
+	if input.Timeout != 0 {
+		opts = append(opts, v1.WithTimeout(input.Timeout))
 	}
-	if params.Arguments.Limit != 0 {
-		opts = append(opts, v1.WithLimit(params.Arguments.Limit))
+	if input.Limit != 0 {
+		opts = append(opts, v1.WithLimit(input.Limit))
 	}
 
-	result := RangeQueryResult{}
+	result := &RangeQueryResult{}
 	if result.Value, result.Warnings, err = q.API.QueryRange(
 		ctx,
-		params.Arguments.Query,
+		input.Query,
 		v1.Range{
 			Start: start,
 			End:   end,
@@ -75,16 +74,7 @@ func (q *expressionQuerier) RangeQueryHandler(ctx context.Context, _ *mcp.Server
 		},
 		opts...,
 	); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-	return &mcp.CallToolResultFor[RangeQueryResult]{
-		Content: []mcp.Content{&mcp.TextContent{
-			Text: string(content),
-		}},
-		StructuredContent: result,
-	}, nil
+	return nil, result, nil
 }

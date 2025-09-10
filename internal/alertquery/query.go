@@ -8,7 +8,7 @@ import (
 )
 
 type AlertQuerier interface {
-	AlertQueryHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[AlertQueryParams]) (*mcp.CallToolResultFor[AlertQueryResult], error)
+	AlertQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *AlertQueryParams) (*mcp.CallToolResult, *AlertQueryResult, error)
 }
 
 func NewAlertQuerier(api api.PrometheusAPI) AlertQuerier {
