@@ -16,6 +16,8 @@ type MetadataQuerier interface {
 	MetricsMetadataQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *MetricsMetadataQueryParams) (*mcp.CallToolResult, *MetricsMetadataQueryResult, error)
 }
 
+// NewMetadataQuerier returns a MetadataQuerier implementation that uses the provided PrometheusAPI.
+// The returned implementation is a concrete metadataQuerier with its API field set to the given api.
 func NewMetadataQuerier(api api.PrometheusAPI) MetadataQuerier {
 	return &metadataQuerier{API: api}
 }

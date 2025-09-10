@@ -40,13 +40,9 @@ type RuleQueryResult = v1.RulesResult
 
 func (q *ruleQuerier) RuleQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *RuleQueryArguments) (*mcp.CallToolResult, *RuleQueryResult, error) {
 	// TODO: Implement filtering and pagination based on input
-	var (
-		result = &RuleQueryResult{}
-		err    error
-	)
-
-	if *result, err = q.API.Rules(ctx); err != nil {
+	result, err := q.API.Rules(ctx)
+	if err != nil {
 		return nil, nil, err
 	}
-	return nil, result, nil
+	return nil, &result, nil
 }

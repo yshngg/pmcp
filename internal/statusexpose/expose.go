@@ -16,6 +16,7 @@ type StatusExposer interface {
 	WALReplayStatsExposeHandler(ctx context.Context, request *mcp.CallToolRequest, input *WALReplayStatsExposeParams) (*mcp.CallToolResult, *WALReplayStatsExposeResult, error)
 }
 
+// NewStatusExposer returns a StatusExposer implementation that uses the provided PrometheusAPI.
 func NewStatusExposer(api api.PrometheusAPI) StatusExposer {
 	return &statusExposer{
 		API: api,
