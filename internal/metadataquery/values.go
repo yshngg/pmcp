@@ -2,7 +2,6 @@ package metadataquery
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
 	"time"
 
@@ -36,44 +35,34 @@ type LabelValuesResult struct {
 	Warnings    v1.Warnings       `json:"warnings,omitempty"`
 }
 
-func (q *metadataQuerier) LabelValuesHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[LabelValuesArguments]) (*mcp.CallToolResultFor[LabelValuesResult], error) {
+func (q *metadataQuerier) LabelValuesHandler(ctx context.Context, request *mcp.CallToolRequest, input *LabelValuesArguments) (*mcp.CallToolResult, *LabelValuesResult, error) {
 	var (
 		start, end time.Time
 		err        error
 	)
-	if start, err = utils.ParseTime(params.Arguments.Start); err != nil {
+	if start, err = utils.ParseTime(input.Start); err != nil {
 		slog.Warn("parse start time", "err", err)
 	}
-	if end, err = utils.ParseTime(params.Arguments.End); err != nil {
+	if end, err = utils.ParseTime(input.End); err != nil {
 		slog.Warn("parse end time", "err", err)
 	}
 
 	opts := make([]v1.Option, 0)
-	if params.Arguments.Limit != 0 {
-		opts = append(opts, v1.WithLimit(params.Arguments.Limit))
+	if input.Limit != 0 {
+		opts = append(opts, v1.WithLimit(input.Limit))
 	}
 
-	result := LabelValuesResult{}
+	result := &LabelValuesResult{}
 	result.LabelValues, result.Warnings, err = q.API.LabelValues(
 		ctx,
-		params.Arguments.Label,
-		params.Arguments.Match,
+		input.Label,
+		input.Match,
 		start,
 		end,
 		opts...,
 	)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-	return &mcp.CallToolResultFor[LabelValuesResult]{
-		Content: []mcp.Content{&mcp.TextContent{
-			Text: string(content),
-		}},
-		StructuredContent: result,
-	}, nil
+	return nil, result, nil
 }

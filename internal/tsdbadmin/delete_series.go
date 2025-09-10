@@ -2,7 +2,6 @@ package tsdbadmin
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log/slog"
 	"time"
@@ -30,35 +29,26 @@ type DeleteSeriesResult struct {
 	Message string `json:"message,omitempty" jsonschema:"Explanation message when the operation fails."`
 }
 
-func (a *tsdbAdmin) DeleteSeriesHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[DeleteSeriesParams]) (*mcp.CallToolResultFor[DeleteSeriesResult], error) {
+func (a *tsdbAdmin) DeleteSeriesHandler(ctx context.Context, request *mcp.CallToolRequest, input *DeleteSeriesParams) (*mcp.CallToolResult, *DeleteSeriesResult, error) {
 	var (
 		start, end time.Time
 		err        error
 	)
-	if start, err = utils.ParseTime(params.Arguments.Start); err != nil {
+	if start, err = utils.ParseTime(input.Start); err != nil {
 		slog.Warn("parse start time", "err", err)
 	}
-	if end, err = utils.ParseTime(params.Arguments.End); err != nil {
+	if end, err = utils.ParseTime(input.End); err != nil {
 		slog.Warn("parse end time", "err", err)
 	}
 
-	if len(params.Arguments.Match) == 0 {
-		return nil, fmt.Errorf("at least one match[] selector is required")
+	if len(input.Match) == 0 {
+		return nil, nil, fmt.Errorf("at least one match[] selector is required")
 	}
 
-	result := DeleteSeriesResult{Success: true}
-	if err = a.API.DeleteSeries(ctx, params.Arguments.Match, start, end); err != nil {
+	result := &DeleteSeriesResult{Success: true}
+	if err = a.API.DeleteSeries(ctx, input.Match, start, end); err != nil {
 		result.Success = false
 		result.Message = err.Error()
 	}
-
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-
-	return &mcp.CallToolResultFor[DeleteSeriesResult]{
-		Content:           []mcp.Content{&mcp.TextContent{Text: string(content)}},
-		StructuredContent: result,
-	}, nil
+	return nil, result, nil
 }

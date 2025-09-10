@@ -10,9 +10,10 @@ import (
 const TargetDiscoverEndpoint = "/targets"
 
 type TargetDiscoverer interface {
-	TargetDiscoverHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[TargetDiscoverParams]) (*mcp.CallToolResultFor[TargetDiscoverResult], error)
+	TargetDiscoverHandler(ctx context.Context, request *mcp.CallToolRequest, input *TargetDiscoverParams) (*mcp.CallToolResult, *TargetDiscoverResult, error)
 }
 
+// NewTargetDiscoverer returns a TargetDiscoverer that uses the provided PrometheusAPI to perform target discovery.
 func NewTargetDiscoverer(api api.PrometheusAPI) TargetDiscoverer {
 	return &targetDiscoverer{API: api}
 }

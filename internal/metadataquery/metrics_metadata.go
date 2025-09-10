@@ -2,7 +2,6 @@ package metadataquery
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
@@ -23,26 +22,17 @@ type MetricsMetadataQueryResult struct {
 	Data map[string][]v1.Metadata `json:"data" jsonschema:"Data consists of an object where each key is a metric name and each value is a list of unique metadata objects, as exposed for that metric name across all targets."`
 }
 
-func (q *metadataQuerier) MetricsMetadataQueryHandler(ctx context.Context, _ *mcp.ServerSession, params *mcp.CallToolParamsFor[MetricsMetadataQueryParams]) (*mcp.CallToolResultFor[MetricsMetadataQueryResult], error) {
+func (q *metadataQuerier) MetricsMetadataQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *MetricsMetadataQueryParams) (*mcp.CallToolResult, *MetricsMetadataQueryResult, error) {
 	var (
-		result MetricsMetadataQueryResult
+		result = &MetricsMetadataQueryResult{}
 		err    error
 	)
 	if result.Data, err = q.API.Metadata(
 		ctx,
-		params.Arguments.Metric,
-		params.Arguments.Limit,
+		input.Metric,
+		input.Limit,
 	); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-
-	return &mcp.CallToolResultFor[MetricsMetadataQueryResult]{
-		Content:           []mcp.Content{&mcp.TextContent{Text: string(content)}},
-		StructuredContent: result,
-	}, nil
+	return nil, result, nil
 }

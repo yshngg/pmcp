@@ -2,7 +2,6 @@ package rulequery
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
@@ -39,24 +38,11 @@ type RuleQueryArguments struct {
 
 type RuleQueryResult = v1.RulesResult
 
-func (q *ruleQuerier) RuleQueryHandler(ctx context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[RuleQueryArguments]) (*mcp.CallToolResultFor[RuleQueryResult], error) {
-	// TODO: Implement filtering and pagination based on params.Arguments
-	var (
-		result RuleQueryResult
-		err    error
-	)
-
-	if result, err = q.API.Rules(ctx); err != nil {
-		return nil, err
-	}
-
-	content, err := json.Marshal(result)
+func (q *ruleQuerier) RuleQueryHandler(ctx context.Context, request *mcp.CallToolRequest, input *RuleQueryArguments) (*mcp.CallToolResult, *RuleQueryResult, error) {
+	// TODO: Implement filtering and pagination based on input
+	result, err := q.API.Rules(ctx)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
-	return &mcp.CallToolResultFor[RuleQueryResult]{
-		Content:           []mcp.Content{&mcp.TextContent{Text: string(content)}},
-		StructuredContent: result,
-	}, nil
+	return nil, &result, nil
 }

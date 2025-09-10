@@ -8,14 +8,15 @@ import (
 )
 
 type StatusExposer interface {
-	ConfigExposeHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[ConfigExposeParams]) (*mcp.CallToolResultFor[ConfigExposeResult], error)
-	FlagsExposeHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[FlagsExposeParams]) (*mcp.CallToolResultFor[FlagsExposeResult], error)
-	RuntimeInformationExposeHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[RuntimeInformationExposeParams]) (*mcp.CallToolResultFor[RuntimeInformationExposeResult], error)
-	BuildInformationExposeHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[BuildInformationExposeParams]) (*mcp.CallToolResultFor[BuildInformationExposeResult], error)
-	TSDBStatsExposeHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[TSDBStatsExposeParams]) (*mcp.CallToolResultFor[TSDBStatsExposeResult], error)
-	WALReplayStatsExposeHandler(ctx context.Context, session *mcp.ServerSession, params *mcp.CallToolParamsFor[WALReplayStatsExposeParams]) (*mcp.CallToolResultFor[WALReplayStatsExposeResult], error)
+	ConfigExposeHandler(ctx context.Context, request *mcp.CallToolRequest, input *ConfigExposeParams) (*mcp.CallToolResult, *ConfigExposeResult, error)
+	FlagsExposeHandler(ctx context.Context, request *mcp.CallToolRequest, input *FlagsExposeParams) (*mcp.CallToolResult, *FlagsExposeResult, error)
+	RuntimeInformationExposeHandler(ctx context.Context, request *mcp.CallToolRequest, input *RuntimeInformationExposeParams) (*mcp.CallToolResult, *RuntimeInformationExposeResult, error)
+	BuildInformationExposeHandler(ctx context.Context, request *mcp.CallToolRequest, input *BuildInformationExposeParams) (*mcp.CallToolResult, *BuildInformationExposeResult, error)
+	TSDBStatsExposeHandler(ctx context.Context, request *mcp.CallToolRequest, input *TSDBStatsExposeParams) (*mcp.CallToolResult, *TSDBStatsExposeResult, error)
+	WALReplayStatsExposeHandler(ctx context.Context, request *mcp.CallToolRequest, input *WALReplayStatsExposeParams) (*mcp.CallToolResult, *WALReplayStatsExposeResult, error)
 }
 
+// NewStatusExposer returns a StatusExposer implementation that uses the provided PrometheusAPI.
 func NewStatusExposer(api api.PrometheusAPI) StatusExposer {
 	return &statusExposer{
 		API: api,

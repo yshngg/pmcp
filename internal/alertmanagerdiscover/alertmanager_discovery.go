@@ -2,7 +2,6 @@ package alertmanagerdiscover
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
@@ -12,19 +11,10 @@ type AlertmanagerDiscoverParams struct{}
 
 type AlertmanagerDiscoverResult = v1.AlertManagersResult
 
-func (d *alertmanagerDiscoverer) AlertmanagerDiscoverHandler(ctx context.Context, _ *mcp.ServerSession, _ *mcp.CallToolParamsFor[AlertmanagerDiscoverParams]) (*mcp.CallToolResultFor[AlertmanagerDiscoverResult], error) {
+func (d *alertmanagerDiscoverer) AlertmanagerDiscoverHandler(ctx context.Context, request *mcp.CallToolRequest, input *AlertmanagerDiscoverParams) (*mcp.CallToolResult, *AlertmanagerDiscoverResult, error) {
 	result, err := d.API.AlertManagers(ctx)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
-	content, err := json.Marshal(result)
-	if err != nil {
-		return nil, err
-	}
-
-	return &mcp.CallToolResultFor[AlertmanagerDiscoverResult]{
-		Content:           []mcp.Content{&mcp.TextContent{Text: string(content)}},
-		StructuredContent: result,
-	}, nil
+	return nil, &result, nil
 }
