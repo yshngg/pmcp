@@ -19,7 +19,7 @@ func (f *fakeAPI) HealthCheck(ctx context.Context) error {
 
 // ensure we have a minimal manager with only what's needed for HealthCheckHandler.
 type managerForTest struct {
-    api interface{
+    api interface {
         HealthCheck(ctx context.Context) error
     }
 }
@@ -32,7 +32,7 @@ func (m *managerForTest) HealthCheckHandler(ctx context.Context, request *mcp.Ca
         Success: true,
     }
     err := m.api.HealthCheck(ctx)
-    if err \!= nil {
+    if err != nil {
         result.Success = false
         result.Message = err.Error()
     }
@@ -46,19 +46,19 @@ func TestHealthCheckHandler_Success(t *testing.T) {
 
     gotToolRes, gotMgmtRes, gotErr := m.HealthCheckHandler(context.Background(), &mcp.CallToolRequest{}, struct{}{})
 
-    if gotErr \!= nil {
+    if gotErr != nil {
         t.Fatalf("expected no error, got %v", gotErr)
     }
-    if gotToolRes \!= nil {
+    if gotToolRes != nil {
         t.Fatalf("expected first return (*mcp.CallToolResult) to be nil, got %#v", gotToolRes)
     }
     if gotMgmtRes == nil {
         t.Fatalf("expected ManagementResult, got nil")
     }
-    if \!gotMgmtRes.Success {
+    if !gotMgmtRes.Success {
         t.Errorf("expected Success=true, got false")
     }
-    if gotMgmtRes.Message \!= "" {
+    if gotMgmtRes.Message != "" {
         t.Errorf("expected empty Message on success, got %q", gotMgmtRes.Message)
     }
 }
@@ -71,10 +71,10 @@ func TestHealthCheckHandler_FailureSetsMessage(t *testing.T) {
 
     gotToolRes, gotMgmtRes, gotErr := m.HealthCheckHandler(context.Background(), &mcp.CallToolRequest{}, struct{}{})
 
-    if gotErr \!= nil {
+    if gotErr != nil {
         t.Fatalf("expected no error, got %v", gotErr)
     }
-    if gotToolRes \!= nil {
+    if gotToolRes != nil {
         t.Fatalf("expected first return (*mcp.CallToolResult) to be nil, got %#v", gotToolRes)
     }
     if gotMgmtRes == nil {
@@ -83,7 +83,7 @@ func TestHealthCheckHandler_FailureSetsMessage(t *testing.T) {
     if gotMgmtRes.Success {
         t.Errorf("expected Success=false, got true")
     }
-    if gotMgmtRes.Message \!= wantMsg {
+    if gotMgmtRes.Message != wantMsg {
         t.Errorf("expected Message=%q, got %q", wantMsg, gotMgmtRes.Message)
     }
 }
@@ -113,7 +113,7 @@ func TestHealthCheckHandler_ContextCancellation(t *testing.T) {
 
     _, gotMgmtRes, _ := m.HealthCheckHandler(ctx, &mcp.CallToolRequest{}, struct{}{})
 
-    if \!ca.sawCanceled {
+    if !ca.sawCanceled {
         t.Errorf("expected cancelAwareAPI to observe canceled context")
     }
     if gotMgmtRes == nil {
@@ -135,13 +135,13 @@ func TestHealthCheckHandler_NilRequest(t *testing.T) {
 
     gotToolRes, gotMgmtRes, gotErr := m.HealthCheckHandler(context.Background(), nil, struct{}{})
 
-    if gotErr \!= nil {
+    if gotErr != nil {
         t.Fatalf("expected no error, got %v", gotErr)
     }
-    if gotToolRes \!= nil {
+    if gotToolRes != nil {
         t.Fatalf("expected first return (*mcp.CallToolResult) to be nil, got %#v", gotToolRes)
     }
-    if gotMgmtRes == nil || \!gotMgmtRes.Success {
+    if gotMgmtRes == nil || !gotMgmtRes.Success {
         t.Errorf("expected success result, got %#v", gotMgmtRes)
     }
 }
