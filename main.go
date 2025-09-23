@@ -94,7 +94,7 @@ func main() {
 			}
 		})
 
-		sseHandler := mcp.NewSSEHandler(func(request *http.Request) *mcp.Server { return server }, &mcp.SSEOptions{})
+		sseHandler := mcp.NewSSEHandler(func(request *http.Request) *mcp.Server { return server }, nil)
 		http.Handle("/mcp", sseHandler)
 
 		slog.Info("Listening on http://" + *mcpAddr)
