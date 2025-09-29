@@ -1,5 +1,7 @@
 # PMCP - Prometheus Model Context Protocol Server
 
+[![codecov](https://codecov.io/gh/yshngg/pmcp/graph/badge.svg?token=C64XY9GFP3)](https://codecov.io/gh/yshngg/pmcp)
+
 **🚀 A Golang-based Model Context Protocol (MCP) server implementation for Prometheus that enables natural language interactions with Prometheus metrics and queries.**
 
 **Built with Go**, PMCP provides a robust, type-safe interface that maintains full consistency with the Prometheus HTTP API, allowing you to query and manage your Prometheus instance through natural language conversations with MCP-compatible clients.
