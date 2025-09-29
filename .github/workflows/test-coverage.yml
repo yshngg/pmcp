@@ -100,6 +100,12 @@ jobs:
             ```
             ${{ fromJSON(steps.coverage.outputs.report) }}```
 
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: cover.out
+
       - name: "Finally check coverage"
         if: steps.coverage.outcome == 'failure'
         shell: bash
