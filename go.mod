@@ -1,13 +1,13 @@
 module github.com/yshngg/pmcp
 
-go 1.23.0
+go 1.24.0
 
 toolchain go1.24.6
 
 require (
 	github.com/modelcontextprotocol/go-sdk v0.8.0
 	github.com/prometheus/client_golang v1.23.2
-	github.com/prometheus/common v0.66.1
+	github.com/prometheus/common v0.67.1
 )
 
 require (
@@ -19,5 +19,5 @@ require (
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/yosida95/uritemplate/v3 v3.0.2 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
-	google.golang.org/protobuf v1.36.9 // indirect
+	google.golang.org/protobuf v1.36.10 // indirect
 )
