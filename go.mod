@@ -7,7 +7,7 @@ toolchain go1.24.6
 require (
 	github.com/modelcontextprotocol/go-sdk v1.0.0
 	github.com/prometheus/client_golang v1.23.2
-	github.com/prometheus/common v0.67.1
+	github.com/prometheus/common v0.67.2
 )
 
 require (
