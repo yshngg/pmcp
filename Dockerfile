@@ -24,7 +24,7 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} \
     .
 
 # Final image
-FROM alpine:3.22
+FROM alpine:3.23
 
 WORKDIR /
 
