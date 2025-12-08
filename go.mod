@@ -1,4 +1,4 @@
-module github.com/yshngg/pmcp
+module github.com/yshngg/prometheus-mcp-server
 
 go 1.24.0
 

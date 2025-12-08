@@ -2,15 +2,15 @@ package bindingblocks
 
 import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/internal/alertmanagerdiscover"
-	"github.com/yshngg/pmcp/internal/alertquery"
-	"github.com/yshngg/pmcp/internal/expressionquery"
-	"github.com/yshngg/pmcp/internal/manage"
-	"github.com/yshngg/pmcp/internal/metadataquery"
-	"github.com/yshngg/pmcp/internal/rulequery"
-	"github.com/yshngg/pmcp/internal/statusexpose"
-	"github.com/yshngg/pmcp/internal/targetdiscover"
-	"github.com/yshngg/pmcp/internal/tsdbadmin"
+	"github.com/yshngg/prometheus-mcp-server/internal/alertmanagerdiscover"
+	"github.com/yshngg/prometheus-mcp-server/internal/alertquery"
+	"github.com/yshngg/prometheus-mcp-server/internal/expressionquery"
+	"github.com/yshngg/prometheus-mcp-server/internal/manage"
+	"github.com/yshngg/prometheus-mcp-server/internal/metadataquery"
+	"github.com/yshngg/prometheus-mcp-server/internal/rulequery"
+	"github.com/yshngg/prometheus-mcp-server/internal/statusexpose"
+	"github.com/yshngg/prometheus-mcp-server/internal/targetdiscover"
+	"github.com/yshngg/prometheus-mcp-server/internal/tsdbadmin"
 )
 
 // addTools registers Prometheus query tools with the MCP server.

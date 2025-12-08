@@ -8,7 +8,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
-	"github.com/yshngg/pmcp/internal/utils"
+	"github.com/yshngg/prometheus-mcp-server/internal/utils"
 )
 
 const LabelValuesEndpoint = "/label/<label_name>/values"

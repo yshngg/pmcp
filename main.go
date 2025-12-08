@@ -11,9 +11,9 @@ import (
 	"text/tabwriter"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/internal/bindingblocks"
-	"github.com/yshngg/pmcp/internal/prometheus/api"
-	"github.com/yshngg/pmcp/internal/version"
+	"github.com/yshngg/prometheus-mcp-server/internal/bindingblocks"
+	"github.com/yshngg/prometheus-mcp-server/internal/prometheus/api"
+	"github.com/yshngg/prometheus-mcp-server/internal/version"
 )
 
 // Schema is the identifier for the Prometheus schema.
@@ -25,7 +25,7 @@ const Schema = "prom"
 // and serves requests until termination.
 // The function exits the program on critical errors or when printing version information.
 func main() {
-	fs := flag.NewFlagSet("pmcp", flag.ExitOnError)
+	fs := flag.NewFlagSet("prometheus-mcp-server", flag.ExitOnError)
 	var (
 		// promAddr is the address of the Prometheus server to connect to.
 		promAddr = fs.String("prom-addr", "http://localhost:9090/", "The address of the Prometheus to connect to.")
@@ -36,7 +36,7 @@ func main() {
 		// printVersion prints the version and exit.
 		printVersion = fs.Bool("version", false, "Print the version and exit.")
 	)
-	fs.Usage = usageFor(fs, "pmcp [flags]")
+	fs.Usage = usageFor(fs, "prometheus-mcp-server [flags]")
 	// Parse command-line flags.
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		slog.Error("parse args", "err", err)
@@ -49,7 +49,7 @@ func main() {
 	}
 
 	server := mcp.NewServer(&mcp.Implementation{
-		Name:    "pmcp",
+		Name:    "prometheus-mcp-server",
 		Version: string(version.Info.Number),
 	}, nil)
 

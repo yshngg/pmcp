@@ -19,8 +19,8 @@ ARG TARGETOS
 ARG TARGETARCH
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} \
-    go build -o pmcp \
-    -ldflags="-s -w -X 'github.com/yshngg/pmcp/internal/version.Number=${VERSION_NUMBER}' -X 'github.com/yshngg/pmcp/internal/version.GitCommit=${GIT_COMMIT}' -X 'github.com/yshngg/pmcp/internal/version.BuildDate=${BUILD_DATE}'" \
+    go build -o prometheus-mcp-server \
+    -ldflags="-s -w -X 'github.com/yshngg/prometheus-mcp-server/internal/version.Number=${VERSION_NUMBER}' -X 'github.com/yshngg/prometheus-mcp-server/internal/version.GitCommit=${GIT_COMMIT}' -X 'github.com/yshngg/prometheus-mcp-server/internal/version.BuildDate=${BUILD_DATE}'" \
     .
 
 # Final image
@@ -28,8 +28,8 @@ FROM alpine:3.23
 
 WORKDIR /
 
-COPY --from=builder /app/pmcp /pmcp
+COPY --from=builder /app/prometheus-mcp-server /prometheus-mcp-server
 
 USER nobody
 
-ENTRYPOINT ["/pmcp"]
+ENTRYPOINT ["/prometheus-mcp-server"]
