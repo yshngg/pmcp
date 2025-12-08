@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
-	"github.com/yshngg/pmcp/internal/utils"
+	"github.com/yshngg/prometheus-mcp-server/internal/utils"
 )
 
 // URL query parameters:

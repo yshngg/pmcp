@@ -4,7 +4,7 @@ GIT_COMMIT := $(shell git rev-parse --short HEAD)
 BUILD_DATE := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 
 # Package and binary name
-BINARY := pmcp
+BINARY := prometheus-mcp-server
 PACKAGE := $(shell go list -m)
 
 # Build flags
